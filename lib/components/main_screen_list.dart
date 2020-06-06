@@ -14,10 +14,18 @@ class MainScreenList extends StatelessWidget {
         primary: false, // so the shopping and store lists don't scroll independently
         itemCount: list.length,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(list[index].name),
-            subtitle: Text(list[index] is ShoppingList ? list.length.toString() + ' items' : list[index].address),
-          );
+          if (index == list.length) {
+            return ListTile(
+                title: Text("Add new...")
+            );
+          } else {
+            return ListTile(
+              title: Text(list[index].name),
+              subtitle: Text(
+                  list[index] is ShoppingList ? list.length.toString() +
+                      ' items' : list[index].address),
+            );
+          }
         }
     );
   }
