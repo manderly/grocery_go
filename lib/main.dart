@@ -68,9 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 MainScreenListHeader(text: headerShoppingLists),
-                MainScreenList(list: shoppingLists),
+                MainScreenList(list: shoppingLists, listType: "shopping list"),
                 MainScreenListHeader(text: headerStores),
-                MainScreenList(list: stores),
+                MainScreenList(list: stores, listType: "store"),
               ],
             ),
           );
