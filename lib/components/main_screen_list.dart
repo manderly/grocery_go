@@ -8,6 +8,10 @@ class MainScreenList extends StatelessWidget {
 
   MainScreenList({Key key, @required this.list, @required this.listType});
 
+  goToStub(destination) {
+    print(destination);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -17,7 +21,8 @@ class MainScreenList extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           if (index == list.length) {
             return ListTile(
-                title: Text("Add new " +  listType  + "...")
+                title: Text("Add new " +  listType  + "..."),
+                onTap: () => goToStub("Going to: Add new " + listType),
             );
           } else {
             return ListTile(
@@ -25,6 +30,7 @@ class MainScreenList extends StatelessWidget {
               subtitle: Text(
                   list[index] is ShoppingList ? list.length.toString() +
                       ' items' : list[index].address),
+              onTap: () => goToStub("Going to: list " + list[index].name),
             );
           }
         }
