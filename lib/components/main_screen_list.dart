@@ -8,6 +8,12 @@ class MainScreenList extends StatelessWidget {
 
   MainScreenList({Key key, @required this.list, @required this.listType});
 
+  goToNew(context, destination) {
+    if (destination == 'shopping list') {
+      Navigator.pushNamed(context, 'newShoppingList');
+    }
+  }
+
   goToStub(destination) {
     print(destination);
   }
@@ -22,7 +28,7 @@ class MainScreenList extends StatelessWidget {
           if (index == list.length) {
             return ListTile(
                 title: Text("Add new " +  listType  + "..."),
-                onTap: () => goToStub("Going to: Add new " + listType),
+                onTap: () => goToNew(context, listType),
             );
           } else {
             return ListTile(

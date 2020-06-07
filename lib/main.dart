@@ -6,14 +6,21 @@ import './components/main_screen_list_header.dart';
 import './models/shopping_list.dart';
 import './models/store.dart';
 
+import './views/new_shopping_list.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var routes = {
+      NewShoppingList.routeName: (context) => NewShoppingList(),
+    };
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      routes: routes,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
