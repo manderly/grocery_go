@@ -7,6 +7,7 @@ import './models/shopping_list.dart';
 import './models/store.dart';
 
 import './views/new_shopping_list.dart';
+import './views/new_store.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
 
     var routes = {
       NewShoppingList.routeName: (context) => NewShoppingList(),
+      NewStore.routeName: (context) => NewStore(),
     };
 
     return MaterialApp(

@@ -11,6 +11,8 @@ class MainScreenList extends StatelessWidget {
   goToNew(context, destination) {
     if (destination == 'shopping list') {
       Navigator.pushNamed(context, 'newShoppingList');
+    } else if (destination == 'store') {
+      Navigator.pushNamed(context, 'newStore');
     }
   }
 
