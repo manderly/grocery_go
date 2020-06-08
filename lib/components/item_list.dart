@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/views/existing_shopping_list.dart';
+import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ItemList extends StatelessWidget {
 
@@ -37,6 +39,17 @@ class ListItem extends StatelessWidget {
 
   ListItem({Key key, @required this.item, this.listType, this.count});
 
+  buildDateString(date) {
+    return DateFormat.yMMMd().format(DateTime.parse(date));
+  }
+
+  buildCrossedOffDate(date) {
+    var difference = new DateTime.now().difference(DateTime.parse(date));
+    var howLongAgo = DateTime.now().subtract(difference);
+
+    return (timeago.format(howLongAgo).toString());
+  }
+
   buildTitleString() {
     if (listType == 'shopping list') {
       return item.name;
@@ -57,9 +70,9 @@ class ListItem extends StatelessWidget {
       } else if (listType == 'store') {
         return item.address;
       } else if (listType == 'item') {
-        return 'Added by ' + item.addedBy + ' on ' + item.lastUpdated;
+        return 'Added by ' + item.addedBy + ' on ' + buildDateString(item.lastUpdated);
       } else if (listType == 'crossedOff') {
-        return 'N days ago at storeName';
+        return '' + buildCrossedOffDate(item.lastUpdated) + ' at storeName';
       } else {
         return "cannot build subtitle";
       }
