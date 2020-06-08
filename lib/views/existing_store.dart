@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/models/store.dart';
 
-class ExistingStore extends StatefulWidget {
-
-  static const routeName = 'existingStore';
-
-  ExistingStore({Key key});
-
-  @override
-  _ExistingStoreState createState() => _ExistingStoreState();
+class ExistingStoreArguments {
+  final Store store;
+  ExistingStoreArguments(this.store);
 }
 
-class _ExistingStoreState extends State<ExistingStore> {
+class ExistingStore extends StatelessWidget {
+
+  static const routeName = '/existingStore';
 
   void updateStore (BuildContext context) {
     print("Updating store");
@@ -19,9 +17,12 @@ class _ExistingStoreState extends State<ExistingStore> {
 
   @override
   Widget build(BuildContext context) {
+
+    final ExistingStoreArguments args = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit store"),
+        title: Text("Edit store: " + args.store.name),
       ),
       body: Center(
         child: Column(
@@ -30,6 +31,7 @@ class _ExistingStoreState extends State<ExistingStore> {
               padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: TextFormField(
                 autofocus: true,
+                initialValue: args.store.name,
                 decoration: InputDecoration(
                     labelText: 'Store name',
                     border: OutlineInputBorder()),
@@ -39,6 +41,7 @@ class _ExistingStoreState extends State<ExistingStore> {
               padding: EdgeInsets.all(10),
               child: TextFormField(
                 autofocus: true,
+                initialValue: args.store.address,
                 decoration: InputDecoration(
                     labelText: 'Store location',
                     border: OutlineInputBorder()),

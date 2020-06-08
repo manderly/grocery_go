@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/views/existing_shopping_list.dart';
+import 'package:grocery_go/views/existing_store.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -78,12 +79,15 @@ class ListItem extends StatelessWidget {
       }
   }
 
-  crossOff(context) {
+  handleTap(context) {
     if (listType == 'shopping list') {
       // todo: pass the list's real ID and name
       Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments('2abc', 'Test list'));
     } else if (listType == 'store') {
-      Navigator.pushNamed(context, 'existingStore');
+      print("going to existing store page");
+      Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(item));
+    } else if (listType == 'item') {
+      print("Crossing off item");
     } else {
       print("Error, unhandled listType in 'crossOff' method item_list.dart");
     }
@@ -94,7 +98,7 @@ class ListItem extends StatelessWidget {
     return ListTile(
       title: Text(buildTitleString()),
       subtitle: Text(buildSubtitleString()),
-      onTap: () => crossOff(context),
+      onTap: () => handleTap(context),
     );
   }
 }

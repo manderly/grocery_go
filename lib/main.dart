@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     var routes = {
       ExistingShoppingList.routeName: (context) => ExistingShoppingList(),
       NewShoppingList.routeName: (context) => NewShoppingList(),
-      ExistingStore.routeName: (context) => ExistingShoppingList(),
+      ExistingStore.routeName: (context) => ExistingStore(),
       NewStore.routeName: (context) => NewStore(),
     };
 
