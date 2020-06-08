@@ -15,9 +15,9 @@ class ExistingShoppingList extends StatelessWidget {
 
   // todo: replace this temporary list with one retrieved from DB using list ID
   final List<Item> list = [
-    Item(id: "abc1", name: "Pepperidge Farm Cinnamon Bread", quantity: 1, subsOk: true, substitutions:["Aunt Millie's Famous Cinnamon Bread"], addedBy: "Mandi", lastUpdated: "2020-06-08T01:02:37+00:00"),
+    Item(id: "abc1", name: "Pepperidge Farm Cinnamon Bread", quantity: 2, subsOk: true, substitutions:["Aunt Millie's Famous Cinnamon Bread"], addedBy: "Mandi", lastUpdated: "2020-06-08T01:02:37+00:00"),
     Item(id: "abc2", name: "egg carton", quantity: 1, subsOk: false, addedBy: "Jon", lastUpdated: "2020-05-30T08:24:58+00:00"),
-    Item(id: "abc3", name: "Huggies diapers size 5", quantity: 1, subsOk: false, addedBy: "Mandi", lastUpdated: "2020-06-01T10:15:23+00:00"),
+    Item(id: "abc3", name: "zucchini", quantity: 3, subsOk: false, addedBy: "Mandi", lastUpdated: "2020-06-01T10:15:23+00:00"),
   ];
 
   final List<Item> crossedOff = [

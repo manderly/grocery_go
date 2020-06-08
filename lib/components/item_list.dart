@@ -57,7 +57,7 @@ class ListItem extends StatelessWidget {
     } else if (listType == 'store') {
       return item.name;
     } else if (listType == 'item') {
-      return item.name + ' (' + item.quantity.toString() + ')';
+      return item.name + (item.quantity > 1 ? ' (' + item.quantity.toString() + ')' : '');
     } else if (listType == 'crossedOff') {
       return item.name;
     } else {
@@ -96,8 +96,10 @@ class ListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(buildTitleString()),
+      title: Text(buildTitleString(), style: (listType == 'crossedOff' ? TextStyle(decoration: TextDecoration.lineThrough) : TextStyle(decoration: TextDecoration.none))),
       subtitle: Text(buildSubtitleString()),
+      trailing: Icon(Icons.info),
+      leading: FlutterLogo(),
       onTap: () => handleTap(context),
     );
   }
