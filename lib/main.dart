@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-import './components/main_screen_list.dart';
-import './components/main_screen_list_header.dart';
+import './components/item_list.dart';
+import './components/item_list_header.dart';
 
+import './models/item.dart';
 import './models/shopping_list.dart';
 import './models/store.dart';
 
+import './views/existing_shopping_list.dart';
+import './views/existing_store.dart';
 import './views/new_shopping_list.dart';
 import './views/new_store.dart';
 
@@ -17,7 +20,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     var routes = {
+      ExistingShoppingList.routeName: (context) => ExistingShoppingList(),
       NewShoppingList.routeName: (context) => NewShoppingList(),
+      ExistingStore.routeName: (context) => ExistingShoppingList(),
       NewStore.routeName: (context) => NewStore(),
     };
 
@@ -76,10 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                MainScreenListHeader(text: headerShoppingLists),
-                MainScreenList(list: shoppingLists, listType: "shopping list"),
-                MainScreenListHeader(text: headerStores),
-                MainScreenList(list: stores, listType: "store"),
+                ItemListHeader(text: headerShoppingLists),
+                ItemList(list: shoppingLists, listType: "shopping list"),
+                ItemListHeader(text: headerStores),
+                ItemList(list: stores, listType: "store"),
               ],
             ),
           );
