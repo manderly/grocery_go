@@ -42,7 +42,7 @@ class ExistingShoppingList extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    ItemListHeader(text: "Aisle ?"),
+                    ItemListHeader(text: "Category/Aisle here"),
                     ItemList(list: list, listType: 'item'),
                     ItemListHeader(text: "Crossed off"),
                     ItemList(list: crossedOff, listType: "crossedOff"),
