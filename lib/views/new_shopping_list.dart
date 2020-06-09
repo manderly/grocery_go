@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NewShoppingList extends StatefulWidget {
 
-  static const routeName = 'newShoppingList';
+  static const routeName = '/newShoppingList';
 
   NewShoppingList({Key key});
 
