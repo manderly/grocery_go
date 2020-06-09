@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NewStore extends StatefulWidget {
 
-  static const routeName = 'newStore';
+  static const routeName = '/newStore';
 
   NewStore({Key key});
 
