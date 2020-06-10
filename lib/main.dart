@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import './components/item_list.dart';
 import './components/item_list_header.dart';
 
-import './models/item.dart';
 import './models/shopping_list.dart';
 import './models/store.dart';
 
 import './views/existing_shopping_list.dart';
 import './views/existing_store.dart';
+import './views/new_item.dart';
 import './views/new_shopping_list.dart';
 import './views/new_store.dart';
+import './views/existing_item.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,6 +25,8 @@ class MyApp extends StatelessWidget {
       NewShoppingList.routeName: (context) => NewShoppingList(),
       ExistingStore.routeName: (context) => ExistingStore(),
       NewStore.routeName: (context) => NewStore(),
+      NewItem.routeName: (context) => NewItem(),
+      ExistingItem.routeName: (context) => ExistingItem(),
     };
 
     return MaterialApp(

@@ -6,6 +6,8 @@ class Item {
   final List<String> substitutions;
   final String addedBy;
   final String lastUpdated;
+  final bool private;
+  final bool urgent;
 
   Item({
     this.id,
@@ -14,6 +16,8 @@ class Item {
     this.subsOk,
     this.substitutions,
     this.addedBy,
-    this.lastUpdated
+    this.lastUpdated,
+    this.private,
+    this.urgent,
   });
 }
