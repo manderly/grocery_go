@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/views/existing_shopping_list.dart';
 import 'package:grocery_go/views/existing_store.dart';
+import 'package:grocery_go/views/new_item.dart';
+import 'package:grocery_go/views/existing_item.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -84,10 +86,21 @@ class ListItem extends StatelessWidget {
       // todo: pass the list's real ID and name
       Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments('2abc', 'Test list'));
     } else if (listType == 'store') {
-      print("going to existing store page");
       Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(item));
     } else if (listType == 'item') {
       print("Crossing off item");
+    } else {
+      print("Error, unhandled listType in 'crossOff' method item_list.dart");
+    }
+  }
+
+  gotoExistingItemManagement(context) {
+    if (listType == 'shopping list') {
+      print("opening page: manage existing shopping list");
+    } else if (listType == 'store') {
+      print("opening page: manage existing store page");
+    } else if (listType == 'item') {
+      Navigator.pushNamed(context, ExistingItem.routeName, arguments: ExistingItemArguments(item));
     } else {
       print("Error, unhandled listType in 'crossOff' method item_list.dart");
     }
@@ -98,8 +111,11 @@ class ListItem extends StatelessWidget {
     return ListTile(
       title: Text(buildTitleString(), style: (listType == 'crossedOff' ? TextStyle(decoration: TextDecoration.lineThrough) : TextStyle(decoration: TextDecoration.none))),
       subtitle: Text(buildSubtitleString()),
-      trailing: Icon(Icons.info),
       leading: FlutterLogo(),
+      trailing: IconButton(
+        icon: Icon(Icons.info),
+        onPressed: () => gotoExistingItemManagement(context),
+      ),
       onTap: () => handleTap(context),
     );
   }
@@ -112,9 +128,11 @@ class AddNew extends StatelessWidget {
 
   goToAddNew(context) {
     if (listType == 'shopping list') {
-      Navigator.pushNamed(context, 'newShoppingList');
+      Navigator.pushNamed(context, '/newShoppingList');
     } else if (listType == 'store') {
-      Navigator.pushNamed(context, 'newStore');
+      Navigator.pushNamed(context, '/newStore');
+    } else if (listType == 'item') {
+      Navigator.pushNamed(context, '/newItem', arguments: NewItemArguments('abc123'));
     } else {
       print('Error, unhandled listType in goToAddNew in item_list.dart');
     }
