@@ -18,19 +18,33 @@ class ExistingItem extends StatefulWidget {
 
 class _ExistingItemState extends State<ExistingItem> {
 
-  _ExistingItemState();
+  String _name = 'ERROR: ARGS NOT LOADED!';
+  int _quantity = 0;
+  bool _subsOk = false;
+  bool _urgent = false;
+  bool _private = false;
+  ExistingItemArguments args;
 
-
-  void _increaseQuantity(item) {
+  void _setStartingValues(item) {
     setState(() {
-      item.quantity = item.quantity+1;
+      _name = item.name;
+      _quantity = item.quantity;
+      _subsOk = item.subsOk;
+      _urgent = item.urgent;
+      _private = item.private;
     });
   }
 
-  void _decreaseQuantity(item) {
-    if (item.quantity > 1) {
+  void _increaseQuantity() {
+    setState(() {
+      _quantity++;
+    });
+  }
+
+  void _decreaseQuantity() {
+    if (_quantity > 1) {
       setState(() {
-        item.quantity = item.quantity-1;
+        _quantity--;
       });
     }
   }
@@ -39,21 +53,21 @@ class _ExistingItemState extends State<ExistingItem> {
     print("stub: open change item category page");
   }
 
-  void _setSubsOk(item, value) {
+  void _setSubsOk(value) {
     setState(() {
-      item.setSubsOk(value);
+      _subsOk = value;
     });
   }
 
-  void _setUrgency(item, value) {
+  void _setUrgency(value) {
     setState(() {
-      item.setUrgent(value);
+      _urgent = value;
     });
   }
 
-  void _setPrivacy(item, value) {
+  void _setPrivacy(value) {
     setState(() {
-      item.setPrivate(value);
+      _private = value;
     });
   }
 
@@ -64,8 +78,10 @@ class _ExistingItemState extends State<ExistingItem> {
 
   @override
   Widget build(BuildContext context) {
-
-    final ExistingItemArguments args = ModalRoute.of(context).settings.arguments;
+    if (args == null) {
+      args = ModalRoute.of(context).settings.arguments;
+      _setStartingValues(args.item);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -81,7 +97,7 @@ class _ExistingItemState extends State<ExistingItem> {
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: TextFormField(
                     autofocus: false,
-                    initialValue: args.item.name,
+                    initialValue: _name,
                     decoration: InputDecoration(
                         labelText: 'Item name (required)',
                         border: OutlineInputBorder()
@@ -92,16 +108,16 @@ class _ExistingItemState extends State<ExistingItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       RaisedButton(
-                        onPressed: () => _decreaseQuantity(args.item),
+                        onPressed: _decreaseQuantity,
                         child: Text('Fewer'),
                       ),
                       Spacer(flex:1),
                       RaisedButton(
-                        onPressed: () => _increaseQuantity(args.item),
+                        onPressed: _increaseQuantity,
                         child: Text('More'),
                       ),
                       Spacer(flex: 4),
-                      Text('Quantity: ' + args.item.quantity.toString()),
+                      Text('$_quantity'),
                       Spacer(flex: 2),
                     ]
                 ),
@@ -112,8 +128,8 @@ class _ExistingItemState extends State<ExistingItem> {
                 Row(
                   children: [
                     Checkbox(
-                        value: args.item.urgent,
-                        onChanged: (bool value) => _setUrgency(args.item, value)
+                        value: _urgent,
+                        onChanged: (bool value) => _setUrgency(value)
                     ),
                     Text("Urgent")
                   ],
@@ -121,8 +137,8 @@ class _ExistingItemState extends State<ExistingItem> {
                 Row(
                   children: [
                     Checkbox(
-                        value: args.item.private,
-                        onChanged: (bool value) => _setPrivacy(args.item, value)
+                        value: _private,
+                        onChanged: (bool value) => _setPrivacy(value)
                     ),
                     Text("Private"),
                   ],
@@ -130,8 +146,8 @@ class _ExistingItemState extends State<ExistingItem> {
                 Row(
                   children: [
                     Checkbox(
-                        value: args.item.subsOk,
-                        onChanged: (bool value) => _setSubsOk(args.item, value)
+                        value: _subsOk,
+                        onChanged: (bool value) => _setSubsOk(value)
                     ),
                     Text("Ok to substitute"),
                     Spacer(flex:6),
@@ -148,6 +164,7 @@ class _ExistingItemState extends State<ExistingItem> {
                   ],
                 ),
                 Text("Item ID: " + args.item.id),
+                Text("Owner: " + args.item.addedBy),
               ],
             ),
           ),
