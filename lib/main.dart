@@ -50,19 +50,20 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
-  // Some placeholder data just so we can see things working
   final List<ShoppingList> shoppingLists = [
-    ShoppingList(name: "Groceries"),
-    ShoppingList(name: "House stuff"),
+    ShoppingList(id: 'list123', name: "Groceries", itemIDs:['abc1', 'abc2', 'abc3', 'abc4']),
+    ShoppingList(id: 'list124', name: "McLendon's / ACE / Home Depot", itemIDs:['abc8', 'abc9']),
+    ShoppingList(id: 'list124', name: "Target", itemIDs:['abc8']),
   ];
 
+  // stores mock data
   final List<Store> stores = [
-    Store(name: "Safeway", address: "Juanita"),
-    Store(name: "Safeway", address: "Bellevue"),
-    Store(name: "Home Depot", address: "Bellevue"),
-    Store(name: "Fred Meyer", address: "Kirkland"),
-    Store(name: "Fred Meyer", address: "Bellevue"),
-    Store(name: "Fred Meyer", address: "Ellensburg")
+    Store(id: 'store1', name: "Safeway", address: "Juanita"),
+    Store(id: 'store2', name: "Safeway", address: "Bellevue"),
+    Store(id: 'store3', name: "Home Depot", address: "Bellevue"),
+    Store(id: 'store4', name: "Fred Meyer", address: "Kirkland"),
+    Store(id: 'store5', name: "Fred Meyer", address: "Bellevue"),
+    Store(id: 'store6', name: "Fred Meyer", address: "Ellensburg")
   ];
 
   @override
@@ -73,8 +74,6 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: LayoutBuilder(
@@ -85,9 +84,9 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
-                ItemList(list: shoppingLists, listType: "shopping list"),
+                ItemList(list: shoppingLists, listType: 'shopping list'),
                 ItemListHeader(text: headerStores),
-                ItemList(list: stores, listType: "store"),
+                ItemList(list: stores, listType: 'store'),
               ],
             ),
           );
