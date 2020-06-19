@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/views/existing_list.dart';
 
 import './components/item_list.dart';
 import './components/item_list_header.dart';
@@ -13,14 +14,16 @@ import './views/new_shopping_list.dart';
 import './views/new_store.dart';
 import './views/existing_item.dart';
 
-void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+void main() => runApp(GroceryGoApp());
+
+class GroceryGoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
 
     var routes = {
+      ExistingList.routeName: (context) => ExistingList(),
       ExistingShoppingList.routeName: (context) => ExistingShoppingList(),
       NewShoppingList.routeName: (context) => NewShoppingList(),
       ExistingStore.routeName: (context) => ExistingStore(),
@@ -34,36 +37,49 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Grocery Go!'),
+      home: MainPage(title: 'Grocery Go!'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class MainPage extends StatefulWidget {
+  MainPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainPageState extends State<MainPage> {
 
-  // Some placeholder data just so we can see things working
   final List<ShoppingList> shoppingLists = [
-    ShoppingList(name: "Groceries"),
-    ShoppingList(name: "House stuff"),
+    ShoppingList(id: 'list123', name: "Groceries", itemIDs:['abc1', 'abc2', 'abc3', 'abc4']),
+    ShoppingList(id: 'list124', name: "McLendon's / ACE / Home Depot", itemIDs:['abc8', 'abc9']),
+    ShoppingList(id: 'list124', name: "Target", itemIDs:['abc8']),
   ];
 
+  // stores mock data
   final List<Store> stores = [
-    Store(name: "Safeway", address: "Juanita"),
-    Store(name: "Safeway", address: "Bellevue"),
-    Store(name: "Home Depot", address: "Bellevue"),
-    Store(name: "Fred Meyer", address: "Kirkland"),
-    Store(name: "Fred Meyer", address: "Bellevue"),
-    Store(name: "Fred Meyer", address: "Ellensburg")
+    Store(id: 'store1', name: "Safeway", address: "Juanita"),
+    Store(id: 'store2', name: "Safeway", address: "Bellevue"),
+    Store(id: 'store3', name: "Home Depot", address: "Bellevue"),
+    Store(id: 'store4', name: "Fred Meyer", address: "Kirkland"),
+    Store(id: 'store5', name: "Fred Meyer", address: "Bellevue"),
+    Store(id: 'store6', name: "Fred Meyer", address: "Ellensburg")
   ];
+
+  _goToList(ShoppingList list) {
+    Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(list));
+  }
+
+  _editStore(Store store) {
+    Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(store));
+  }
+
+  _editList(ShoppingList list) {
+    Navigator.pushNamed(context, ExistingList.routeName, arguments: ExistingListArguments(list));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: LayoutBuilder(
@@ -85,9 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
-                ItemList(list: shoppingLists, listType: "shopping list"),
+                ItemList(list: shoppingLists, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList),
                 ItemListHeader(text: headerStores),
-                ItemList(list: stores, listType: "store"),
+                ItemList(list: stores, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore),
               ],
             ),
           );
