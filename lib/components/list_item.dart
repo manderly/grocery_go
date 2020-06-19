@@ -49,33 +49,6 @@ class ListItem extends StatelessWidget {
     }
   }
 
-  /*
-  handleTap(context) {
-    if (listType == 'shopping list') {
-      Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(item.id, item.name));
-    } else if (listType == 'store') {
-      Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(item));
-    } else if (listType == 'item') {
-      print("Crossing off item: " + item.name);
-    } else {
-      print("Error, unhandled listType in 'handleTap' method item_list.dart");
-    }
-  }
-
-  gotoExistingItemManagement(context) {
-    if (listType == 'shopping list') {
-      print("opening page: manage existing shopping list");
-    } else if (listType == 'store') {
-      Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(item));
-    } else if (listType == 'item') {
-      Navigator.pushNamed(context, ExistingItem.routeName, arguments: ExistingItemArguments(item));
-    } else {
-      print("Error, unhandled listType in 'crossOff' method item_list.dart");
-    }
-  }
-
-   */
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
