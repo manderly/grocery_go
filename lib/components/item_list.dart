@@ -33,7 +33,7 @@ class ItemList extends StatelessWidget {
             if (listType == 'crossedOff') {
               return DeleteAll();
             } else { // store, shopping list
-              return AddNew(listType: listType);
+              return AddNew(list: list, listType: listType);
             }
           } else {
             return ListItem(item: list[index], listType: listType, count: getCount(list[index]), onTap: onItemTap, onInfoTap: onInfoTap);

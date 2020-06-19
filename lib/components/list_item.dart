@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_go/views/existing_shopping_list.dart';
-import 'package:grocery_go/views/existing_store.dart';
-
-import 'package:grocery_go/views/existing_item.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
