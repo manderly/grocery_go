@@ -11,8 +11,10 @@ class ListItem extends StatelessWidget {
   final item;
   final listType;
   final count;
+  final onTap;
+  final onInfoTap;
 
-  ListItem({Key key, @required this.item, this.listType, this.count});
+  ListItem({Key key, @required this.item, this.listType, this.count, this.onTap, this.onInfoTap});
 
   buildDateString(date) {
     return DateFormat.yMMMd().format(DateTime.parse(date));
@@ -47,14 +49,14 @@ class ListItem extends StatelessWidget {
     }
   }
 
+  /*
   handleTap(context) {
     if (listType == 'shopping list') {
-      // todo: pass the list's real ID and name
-      Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments('2abc', 'Test list'));
+      Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(item.id, item.name));
     } else if (listType == 'store') {
       Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(item));
     } else if (listType == 'item') {
-      print("Crossing off item");
+      print("Crossing off item: " + item.name);
     } else {
       print("Error, unhandled listType in 'handleTap' method item_list.dart");
     }
@@ -64,13 +66,15 @@ class ListItem extends StatelessWidget {
     if (listType == 'shopping list') {
       print("opening page: manage existing shopping list");
     } else if (listType == 'store') {
-      print("opening page: manage existing store page");
+      Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(item));
     } else if (listType == 'item') {
       Navigator.pushNamed(context, ExistingItem.routeName, arguments: ExistingItemArguments(item));
     } else {
       print("Error, unhandled listType in 'crossOff' method item_list.dart");
     }
   }
+
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +84,9 @@ class ListItem extends StatelessWidget {
       leading: FlutterLogo(),
       trailing: IconButton(
         icon: Icon(Icons.info),
-        onPressed: () => gotoExistingItemManagement(context),
+        onPressed: () => onInfoTap(item),
       ),
-      onTap: () => handleTap(context),
+      onTap: () => onTap(item), //handleTap(context),
     );
   }
 }

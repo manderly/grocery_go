@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/views/existing_list.dart';
 
 import './components/item_list.dart';
 import './components/item_list_header.dart';
@@ -13,6 +14,7 @@ import './views/new_shopping_list.dart';
 import './views/new_store.dart';
 import './views/existing_item.dart';
 
+
 void main() => runApp(GroceryGoApp());
 
 class GroceryGoApp extends StatelessWidget {
@@ -21,6 +23,7 @@ class GroceryGoApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     var routes = {
+      ExistingList.routeName: (context) => ExistingList(),
       ExistingShoppingList.routeName: (context) => ExistingShoppingList(),
       NewShoppingList.routeName: (context) => NewShoppingList(),
       ExistingStore.routeName: (context) => ExistingStore(),
@@ -66,6 +69,18 @@ class _MainPageState extends State<MainPage> {
     Store(id: 'store6', name: "Fred Meyer", address: "Ellensburg")
   ];
 
+  _goToList(ShoppingList list) {
+    Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(list));
+  }
+
+  _editStore(Store store) {
+    Navigator.pushNamed(context, ExistingStore.routeName, arguments: ExistingStoreArguments(store));
+  }
+
+  _editList(ShoppingList list) {
+    Navigator.pushNamed(context, ExistingList.routeName, arguments: ExistingListArguments(list));
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -84,9 +99,9 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
-                ItemList(list: shoppingLists, listType: 'shopping list'),
+                ItemList(list: shoppingLists, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList),
                 ItemListHeader(text: headerStores),
-                ItemList(list: stores, listType: 'store'),
+                ItemList(list: stores, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore),
               ],
             ),
           );

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list.dart';
 import 'package:grocery_go/components/item_list_header.dart';
 import 'package:grocery_go/models/item.dart';
+import 'package:grocery_go/models/shopping_list.dart';
+
+import 'existing_item.dart';
 
 class ExistingShoppingListArguments {
-  final String listID;
-  final String listName;
-  ExistingShoppingListArguments(this.listID, this.listName);
+  final ShoppingList list;
+  ExistingShoppingListArguments(this.list);
 }
 
 class ExistingShoppingList extends StatelessWidget {
@@ -123,14 +125,26 @@ class ExistingShoppingList extends StatelessWidget {
     Item(id: "abc7", name: "Pillsbury Chocolate Chip Cookie dough roll", quantity: 1, subsOk: false, addedBy: "Jon", lastUpdated: "2020-05-05T05:10:16+00:00", urgent: false, private: false),
   ];
 
+  _crossOff(Item item) {
+    print("Remove this id from this list: " + item.id);
+  }
+
+  _addToList(Item item) {
+    print("Add this item to the list: " + item.id);
+  }
+
   @override
   Widget build(BuildContext context) {
 
     final ExistingShoppingListArguments args = ModalRoute.of(context).settings.arguments;
 
+    _editItem(Item item) {
+      Navigator.pushNamed(context, ExistingItem.routeName, arguments: ExistingItemArguments(item));
+    }
+
     return Scaffold(
         appBar: AppBar(
-          title: Text(args.listName + ", id: " + args.listID),
+          title: Text(args.list.name + " [id: " + args.list.id + "]"),
         ),
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints viewportConstraints) {
@@ -140,9 +154,9 @@ class ExistingShoppingList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     ItemListHeader(text: "Category/Aisle here"),
-                    ItemList(list: list, listType: 'item'),
+                    ItemList(list: list, listType: 'item', onItemTap: _crossOff, onInfoTap: _editItem),
                     ItemListHeader(text: "Crossed off"),
-                    ItemList(list: crossedOff, listType: "crossedOff"),
+                    ItemList(list: crossedOff, listType: "crossedOff", onItemTap: _addToList, onInfoTap: _editItem),
                   ],
                 ),
               );

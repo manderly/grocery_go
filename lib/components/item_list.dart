@@ -8,14 +8,16 @@ class ItemList extends StatelessWidget {
 
   final list;
   final listType;
+  final onItemTap;
+  final onInfoTap;
 
-  ItemList({Key key, @required this.list, @required this.listType});
+  ItemList({Key key, @required this.list, @required this.listType, @required this.onItemTap, @required this.onInfoTap});
 
   @override
   Widget build(BuildContext context) {
 
     int getCount(item) {
-      if (listType == 'shopping lists') {
+      if (listType == 'shopping list') {
         return item.itemIDs.length;
       } else {
         return list.length;
@@ -34,7 +36,7 @@ class ItemList extends StatelessWidget {
               return AddNew(listType: listType);
             }
           } else {
-            return ListItem(item: list[index], listType: listType, count: getCount(list[index]));
+            return ListItem(item: list[index], listType: listType, count: getCount(list[index]), onTap: onItemTap, onInfoTap: onInfoTap);
           }
         }
     );
