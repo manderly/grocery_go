@@ -14,6 +14,9 @@ import './views/new_shopping_list.dart';
 import './views/new_store.dart';
 import './views/existing_item.dart';
 
+import './db/database_manager.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(GroceryGoApp());
 
@@ -52,6 +55,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+  final DatabaseManager db = DatabaseManager();
 
   final List<ShoppingList> shoppingLists = [
     ShoppingList(id: 'list123', name: "Groceries", itemIDs:['abc1', 'abc2', 'abc3', 'abc4']),
@@ -99,7 +104,8 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
-                ItemList(list: shoppingLists, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList),
+                _shoppingLists(context),
+                //ItemList(list: shoppingLists, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList),
                 ItemListHeader(text: headerStores),
                 ItemList(list: stores, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore),
               ],
@@ -108,4 +114,20 @@ class _MainPageState extends State<MainPage> {
         }),
     );
   }
+
+  Widget _shoppingLists(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: db.getShoppingListStream(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError)
+            return Text('Error: ${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting: return new Text('Loading...');
+            default:
+              return ItemList(list: QuerySnapshot, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList);
+          }
+        }
+    );
+  }
 }
+

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/views/new_item.dart';
-import 'package:grocery_go/views/new_shopping_list.dart';
 
 class AddNew extends StatelessWidget {
 

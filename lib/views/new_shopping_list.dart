@@ -51,7 +51,7 @@ class _AddShoppingListFormState extends State<AddShoppingListForm> {
       formKey.currentState.save();
       //get the current date
       newShoppingListFields.dateTime = DateTime.now();
-      // confirm with a snackbar
+      // confirm with a snack bar
       Scaffold.of(context).showSnackBar(
           SnackBar(content: Text('New list created: ' + newShoppingListFields.name))
       );
