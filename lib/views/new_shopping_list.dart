@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
 
 class NewShoppingList extends StatefulWidget {
@@ -36,6 +37,8 @@ class AddShoppingListForm extends StatefulWidget {
 class _AddShoppingListFormState extends State<AddShoppingListForm> {
   final formKey = GlobalKey<FormState>();
 
+  final DatabaseManager db = DatabaseManager();
+
   final newShoppingListFields = ShoppingListDTO();
 
   String validateStringInput(String value) {
@@ -49,8 +52,11 @@ class _AddShoppingListFormState extends State<AddShoppingListForm> {
     if (formState.validate()) {
       // save the form
       formKey.currentState.save();
-      //get the current date
-      newShoppingListFields.dateTime = DateTime.now();
+      // this data is auto-generated when a new list is made
+      newShoppingListFields.date = DateTime.now().toString();
+      newShoppingListFields.itemIDs = new List<String>();
+      // put this stuff in the db
+      db.addShoppingList(newShoppingListFields);
       // confirm with a snack bar
       Scaffold.of(context).showSnackBar(
           SnackBar(content: Text('New list created: ' + newShoppingListFields.name))

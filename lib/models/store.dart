@@ -1,7 +1,13 @@
-class Store {
-  final String id;
-  final String name;
-  final String address;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  Store({this.id, this.name, this.address});
+class Store {
+  String id;
+  String name;
+  String address;
+
+  Store(DocumentSnapshot document) {
+    this.id = document['id'];
+    this.name = document['name'];
+    this.address = document['address'];
+  }
 }

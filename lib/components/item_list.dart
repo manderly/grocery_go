@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/models/shopping_list.dart';
+import 'package:grocery_go/models/store.dart';
 
 import 'add_new.dart';
 import 'delete_all.dart';
@@ -6,8 +8,8 @@ import 'list_item.dart';
 
 class ItemList extends StatelessWidget {
 
-  final list;
-  final listType;
+  final List list;
+  final String listType;
   final onItemTap;
   final onInfoTap;
 
@@ -36,7 +38,15 @@ class ItemList extends StatelessWidget {
               return AddNew(list: list, listType: listType);
             }
           } else {
-            return ListItem(item: list[index], listType: listType, count: getCount(list[index]), onTap: onItemTap, onInfoTap: onInfoTap);
+            var listItem;
+
+            if (listType == 'shopping list') {
+              listItem = ShoppingList(list[index]);
+            } else if (listType == 'store') {
+              listItem = Store(list[index]);
+            }
+
+            return ListItem(item: listItem, listType: listType, count: getCount(listItem), onTap: onItemTap, onInfoTap: onInfoTap);
           }
         }
     );

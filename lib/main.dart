@@ -18,6 +18,11 @@ import './db/database_manager.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'components/list_item.dart';
+import 'models/item.dart';
+
 void main() => runApp(GroceryGoApp());
 
 class GroceryGoApp extends StatelessWidget {
@@ -58,13 +63,16 @@ class _MainPageState extends State<MainPage> {
 
   final DatabaseManager db = DatabaseManager();
 
+  /*
   final List<ShoppingList> shoppingLists = [
     ShoppingList(id: 'list123', name: "Groceries", itemIDs:['abc1', 'abc2', 'abc3', 'abc4']),
     ShoppingList(id: 'list124', name: "McLendon's / ACE / Home Depot", itemIDs:['abc8', 'abc9']),
     ShoppingList(id: 'list124', name: "Target", itemIDs:['abc8']),
   ];
+   */
 
   // stores mock data
+  /*
   final List<Store> stores = [
     Store(id: 'store1', name: "Safeway", address: "Juanita"),
     Store(id: 'store2', name: "Safeway", address: "Bellevue"),
@@ -73,6 +81,7 @@ class _MainPageState extends State<MainPage> {
     Store(id: 'store5', name: "Fred Meyer", address: "Bellevue"),
     Store(id: 'store6', name: "Fred Meyer", address: "Ellensburg")
   ];
+   */
 
   _goToList(ShoppingList list) {
     Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(list));
@@ -105,9 +114,8 @@ class _MainPageState extends State<MainPage> {
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
                 _shoppingLists(context),
-                //ItemList(list: shoppingLists, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList),
                 ItemListHeader(text: headerStores),
-                ItemList(list: stores, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore),
+                _stores(context),
               ],
             ),
           );
@@ -116,15 +124,36 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _shoppingLists(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder(
         stream: db.getShoppingListStream(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError)
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting: return new Text('Loading...');
-            default:
-              return ItemList(list: QuerySnapshot, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList);
+          }
+
+          if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
+            return ItemList(list: snapshot.data.documents, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList);
+
+          } else {
+            return Text("Error: no shopping list data");
+          }
+        }
+    );
+  }
+
+  Widget _stores(BuildContext context) {
+    return StreamBuilder(
+        stream: db.getStoresStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
+            return ItemList(list: snapshot.data.documents, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore);
+
+          } else {
+            return Text("Error: no store data");
           }
         }
     );

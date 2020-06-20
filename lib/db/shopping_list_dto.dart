@@ -1,9 +1,16 @@
 class ShoppingListDTO {
 
   String name;
-  DateTime dateTime;
+  String date;
+  List itemIDs;
 
   String toString() {
-    return 'name: $name, date: $dateTime';
+    return 'name: $name, date: $date, storeIDs: $itemIDs';
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic> {
+    'name': this.name,
+    'date': this.date,
+    'itemIDs': this.itemIDs,
+  };
 }
