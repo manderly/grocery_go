@@ -18,4 +18,8 @@ class DatabaseManager {
     return shoppingLists.add(shoppingList.toJson());
   }
 
+  Future<void> updateShoppingList(String id, ShoppingListDTO shoppingList) {
+    return shoppingLists.document(id).updateData(shoppingList.toJson());
+  }
+
 }

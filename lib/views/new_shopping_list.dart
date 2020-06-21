@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
@@ -47,16 +48,23 @@ class _AddShoppingListFormState extends State<AddShoppingListForm> {
     } else return null;
   }
 
-  void saveNewList(BuildContext context) {
+  void saveNewList(BuildContext context) async {
     final formState = formKey.currentState;
     if (formState.validate()) {
       // save the form
       formKey.currentState.save();
+
       // this data is auto-generated when a new list is made
       newShoppingListFields.date = DateTime.now().toString();
       newShoppingListFields.itemIDs = new List<String>();
-      // put this stuff in the db
-      db.addShoppingList(newShoppingListFields);
+
+      // put this stuff in the db and get the ID that was created
+      DocumentReference docRef = await db.addShoppingList(newShoppingListFields);
+
+      // update the record to have the ID that was generated
+      newShoppingListFields.id = docRef.documentID;
+      db.updateShoppingList(docRef.documentID, newShoppingListFields);
+
       // confirm with a snack bar
       Scaffold.of(context).showSnackBar(
           SnackBar(content: Text('New list created: ' + newShoppingListFields.name))
