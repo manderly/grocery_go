@@ -14,6 +14,7 @@ import './views/new_shopping_list.dart';
 import './views/new_store.dart';
 import './views/existing_item.dart';
 
+import './db/database_manager.dart';
 
 void main() => runApp(GroceryGoApp());
 
@@ -53,21 +54,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
-  final List<ShoppingList> shoppingLists = [
-    ShoppingList(id: 'list123', name: "Groceries", itemIDs:['abc1', 'abc2', 'abc3', 'abc4']),
-    ShoppingList(id: 'list124', name: "McLendon's / ACE / Home Depot", itemIDs:['abc8', 'abc9']),
-    ShoppingList(id: 'list124', name: "Target", itemIDs:['abc8']),
-  ];
-
-  // stores mock data
-  final List<Store> stores = [
-    Store(id: 'store1', name: "Safeway", address: "Juanita"),
-    Store(id: 'store2', name: "Safeway", address: "Bellevue"),
-    Store(id: 'store3', name: "Home Depot", address: "Bellevue"),
-    Store(id: 'store4', name: "Fred Meyer", address: "Kirkland"),
-    Store(id: 'store5', name: "Fred Meyer", address: "Bellevue"),
-    Store(id: 'store6', name: "Fred Meyer", address: "Ellensburg")
-  ];
+  final DatabaseManager db = DatabaseManager();
 
   _goToList(ShoppingList list) {
     Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(list));
@@ -99,13 +86,50 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
-                ItemList(list: shoppingLists, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList),
+                _shoppingLists(context),
                 ItemListHeader(text: headerStores),
-                ItemList(list: stores, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore),
+                _stores(context),
               ],
             ),
           );
         }),
     );
   }
+
+  Widget _shoppingLists(BuildContext context) {
+    return StreamBuilder(
+        stream: db.getShoppingListStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
+            return ItemList(list: snapshot.data.documents, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList);
+
+          } else {
+            return Text("Error: no shopping list data");
+          }
+        }
+    );
+  }
+
+  Widget _stores(BuildContext context) {
+    return StreamBuilder(
+        stream: db.getStoresStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
+            return ItemList(list: snapshot.data.documents, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore);
+
+          } else {
+            return Text("Error: no store data");
+          }
+        }
+    );
+  }
 }
+

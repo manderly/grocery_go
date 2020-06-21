@@ -3,8 +3,9 @@ import 'package:grocery_go/views/new_item.dart';
 
 class AddNew extends StatelessWidget {
 
+  final list;
   final listType;
-  AddNew({Key key, @required this.listType});
+  AddNew({Key key, @required this.list, @required this.listType});
 
   goToAddNew(context) {
     if (listType == 'shopping list') {
