@@ -58,7 +58,7 @@ class _AddShoppingListFormState extends State<AddShoppingListForm> {
       newShoppingListFields.itemIDs = new List<String>();
 
       // put this stuff in the db and get the ID that was created
-      var docRef = await db.addShoppingList(newShoppingListFields);
+      await db.addShoppingList(newShoppingListFields);
 
       // confirm it with a snack bar
       Scaffold.of(context).showSnackBar(
