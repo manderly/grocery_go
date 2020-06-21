@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
+import 'package:grocery_go/db/store_dto.dart';
 
 class DatabaseManager {
 
@@ -7,11 +8,11 @@ class DatabaseManager {
   final CollectionReference stores = Firestore.instance.collection('stores');
 
   Stream<QuerySnapshot> getShoppingListStream() {
-    return shoppingLists.snapshots();
+    return shoppingLists.orderBy("name").snapshots();
   }
 
   Stream<QuerySnapshot> getStoresStream() {
-    return stores.snapshots();
+    return stores.orderBy("name").snapshots();
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {
@@ -24,5 +25,11 @@ class DatabaseManager {
   Future<void> updateShoppingList(String id, ShoppingListDTO shoppingList) {
     return shoppingLists.document(id).updateData(shoppingList.toJson());
   } */
+
+  Future<DocumentReference> addStore(StoreDTO store) async {
+    DocumentReference docRef = await stores.add(store.toJson());
+    stores.document(docRef.documentID).updateData({'id':docRef.documentID});
+    return docRef;
+  }
 
 }
