@@ -51,7 +51,6 @@ class _AddShoppingListFormState extends State<AddShoppingListForm> {
   void saveNewList(BuildContext context) async {
     final formState = formKey.currentState;
     if (formState.validate()) {
-      // save the form
       formKey.currentState.save();
 
       // this data is auto-generated when a new list is made
@@ -59,13 +58,9 @@ class _AddShoppingListFormState extends State<AddShoppingListForm> {
       newShoppingListFields.itemIDs = new List<String>();
 
       // put this stuff in the db and get the ID that was created
-      DocumentReference docRef = await db.addShoppingList(newShoppingListFields);
+      var docRef = await db.addShoppingList(newShoppingListFields);
 
-      // update the record to have the ID that was generated
-      newShoppingListFields.id = docRef.documentID;
-      db.updateShoppingList(docRef.documentID, newShoppingListFields);
-
-      // confirm with a snack bar
+      // confirm it with a snack bar
       Scaffold.of(context).showSnackBar(
           SnackBar(content: Text('New list created: ' + newShoppingListFields.name))
       );

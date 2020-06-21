@@ -14,12 +14,15 @@ class DatabaseManager {
     return stores.snapshots();
   }
 
-  Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) {
-    return shoppingLists.add(shoppingList.toJson());
+  Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {
+    DocumentReference docRef = await shoppingLists.add(shoppingList.toJson());
+    shoppingLists.document(docRef.documentID).updateData({'id':docRef.documentID});
+    return docRef;
   }
 
+  /*
   Future<void> updateShoppingList(String id, ShoppingListDTO shoppingList) {
     return shoppingLists.document(id).updateData(shoppingList.toJson());
-  }
+  } */
 
 }
