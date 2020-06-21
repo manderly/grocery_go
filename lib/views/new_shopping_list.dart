@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';

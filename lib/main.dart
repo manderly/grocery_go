@@ -16,13 +16,6 @@ import './views/existing_item.dart';
 
 import './db/database_manager.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'components/list_item.dart';
-import 'models/item.dart';
-
 void main() => runApp(GroceryGoApp());
 
 class GroceryGoApp extends StatelessWidget {
