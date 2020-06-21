@@ -63,26 +63,6 @@ class _MainPageState extends State<MainPage> {
 
   final DatabaseManager db = DatabaseManager();
 
-  /*
-  final List<ShoppingList> shoppingLists = [
-    ShoppingList(id: 'list123', name: "Groceries", itemIDs:['abc1', 'abc2', 'abc3', 'abc4']),
-    ShoppingList(id: 'list124', name: "McLendon's / ACE / Home Depot", itemIDs:['abc8', 'abc9']),
-    ShoppingList(id: 'list124', name: "Target", itemIDs:['abc8']),
-  ];
-   */
-
-  // stores mock data
-  /*
-  final List<Store> stores = [
-    Store(id: 'store1', name: "Safeway", address: "Juanita"),
-    Store(id: 'store2', name: "Safeway", address: "Bellevue"),
-    Store(id: 'store3', name: "Home Depot", address: "Bellevue"),
-    Store(id: 'store4', name: "Fred Meyer", address: "Kirkland"),
-    Store(id: 'store5', name: "Fred Meyer", address: "Bellevue"),
-    Store(id: 'store6', name: "Fred Meyer", address: "Ellensburg")
-  ];
-   */
-
   _goToList(ShoppingList list) {
     Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(list));
   }
