@@ -20,13 +20,18 @@ class DatabaseManager {
     shoppingLists.document(docRef.documentID).updateData({'id':docRef.documentID});
     return docRef;
   }
-  
-  Future<DocumentReference> updateShoppingList(String id, ShoppingListDTO shoppingList) async {
-    DocumentReference docRef = shoppingLists.document(id);
-    Firestore.instance.runTransaction((transaction) async {
-      await transaction.update(docRef, shoppingList.toJson());
-    });
-    return docRef;
+
+  Future updateShoppingList(String id, ShoppingListDTO shoppingList) async {
+    if (id != null && id.length > 0) {
+      DocumentReference docRef = shoppingLists.document(id);
+      Firestore.instance.runTransaction((transaction) async {
+        await transaction.update(docRef, shoppingList.toJson());
+      }).catchError((e) {
+        print(e.toString());
+      });
+    } else {
+      print("ID is null/has no length");
+    }
   }
 
   Future<DocumentReference> addStore(StoreDTO store) async {
@@ -35,11 +40,17 @@ class DatabaseManager {
     return docRef;
   }
 
-  Future<DocumentReference> updateStore(String id, StoreDTO store) async {
-    DocumentReference docRef = stores.document(id);
-    Firestore.instance.runTransaction((transaction) async {
-      await transaction.update(docRef, store.toJson());
-    });
-    return docRef;
+  Future updateStore(String id, StoreDTO store) async {
+    if (id != null && id.length > 0) {
+      DocumentReference docRef = stores.document(id);
+      Firestore.instance.runTransaction((transaction) async {
+        await transaction.update(docRef, store.toJson());
+      }).catchError((e) {
+        print(e.toString());
+      });
+    } else {
+      print("ID is null/has no length");
+    }
   }
+
 }
