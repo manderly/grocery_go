@@ -10,7 +10,7 @@ class ListItem extends StatelessWidget {
   final onTap;
   final onInfoTap;
 
-  ListItem({Key key, @required this.item, this.listType, this.count, this.onTap, this.onInfoTap});
+  ListItem({Key key, this.item: "Unknown", this.listType, this.count, this.onTap, this.onInfoTap});
 
   buildDateString(date) {
     return DateFormat.yMMMd().format(DateTime.parse(date));
@@ -26,7 +26,7 @@ class ListItem extends StatelessWidget {
   buildTitleString() {
     if (listType == 'item') {
       return item.name + (item.quantity > 1 ? ' (' + item.quantity.toString() + ')' : '');
-    } else {  // crossed off, shopping list, store
+    } else { // crossed off, shopping list, store
       return item.name;
     }
   }

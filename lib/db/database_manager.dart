@@ -20,11 +20,14 @@ class DatabaseManager {
     shoppingLists.document(docRef.documentID).updateData({'id':docRef.documentID});
     return docRef;
   }
-
-  /*
-  Future<void> updateShoppingList(String id, ShoppingListDTO shoppingList) {
-    return shoppingLists.document(id).updateData(shoppingList.toJson());
-  } */
+  
+  Future<DocumentReference> updateShoppingList(String id, ShoppingListDTO shoppingList) async {
+    DocumentReference docRef = shoppingLists.document(id);
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.update(docRef, shoppingList.toJson());
+    });
+    return docRef;
+  }
 
   Future<DocumentReference> addStore(StoreDTO store) async {
     DocumentReference docRef = await stores.add(store.toJson());

@@ -6,7 +6,7 @@ class ShoppingListDTO {
   List itemIDs;
 
   String toString() {
-    return 'id: $id, name: $name, date: $date, storeIDs: $itemIDs';
+    return 'id: $id, name: $name, date: $date, itemIDs: $itemIDs';
   }
 
   Map<String, dynamic> toJson() => <String, dynamic> {
