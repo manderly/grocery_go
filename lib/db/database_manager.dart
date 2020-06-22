@@ -35,4 +35,12 @@ class DatabaseManager {
     return docRef;
   }
 
+  Future<DocumentReference> updateStore(String id, StoreDTO store) async {
+    DocumentReference docRef = stores.document(id);
+    Firestore.instance.runTransaction((transaction) async {
+      await transaction.update(docRef, store.toJson());
+    });
+    return docRef;
+  }
+
 }
