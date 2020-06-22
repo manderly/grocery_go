@@ -20,7 +20,7 @@ class ItemList extends StatelessWidget {
 
     int getCount(item) {
       if (listType == 'shopping list') {
-        return item.itemIDs.length;
+        return item.itemIDs?.length;
       } else {
         return list.length;
       }

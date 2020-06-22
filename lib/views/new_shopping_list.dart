@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
+import 'package:grocery_go/forms/shopping_list_form.dart';
 
 class NewShoppingList extends StatefulWidget {
 
@@ -22,68 +23,8 @@ class _NewShoppingListState extends State<NewShoppingList> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: AddShoppingListForm(),
+          child: ShoppingListForm(),
         ),
-      ),
-    );
-  }
-}
-
-class AddShoppingListForm extends StatefulWidget {
-  @override
-  _AddShoppingListFormState createState() => _AddShoppingListFormState();
-}
-
-class _AddShoppingListFormState extends State<AddShoppingListForm> {
-  final formKey = GlobalKey<FormState>();
-
-  final DatabaseManager db = DatabaseManager();
-
-  final newShoppingListFields = ShoppingListDTO();
-
-  String validateStringInput(String value) {
-    if (value.isEmpty) {
-      return 'Please enter a name';
-    } else return null;
-  }
-
-  void saveNewList(BuildContext context) async {
-    final formState = formKey.currentState;
-    if (formState.validate()) {
-      formKey.currentState.save();
-      newShoppingListFields.date = DateTime.now().toString();
-      newShoppingListFields.itemIDs = new List<String>();
-      await db.addShoppingList(newShoppingListFields);
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('New list created: ' + newShoppingListFields.name))
-      );
-      // go back to main view
-      Navigator.of(context).pop();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          TextFormField(
-              autofocus: true,
-              decoration: InputDecoration(
-                  labelText: 'Shopping list name',
-                  border: OutlineInputBorder()
-              ),
-              validator: (value) => validateStringInput(value),
-              onSaved: (value) {
-                newShoppingListFields.name = value;
-              }
-          ),
-          RaisedButton(
-            onPressed: () => saveNewList(context),
-            child: Text('Save'),
-          ),
-        ],
       ),
     );
   }

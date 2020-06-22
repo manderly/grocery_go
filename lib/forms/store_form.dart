@@ -35,6 +35,7 @@ class _StoreFormState extends State<StoreForm> {
       storeFields.date = DateTime.now().toString();
 
       if (args != null) {
+        storeFields.id = args.store.id;
         await db.updateStore(args.store.id, storeFields);
       } else {
         await db.addStore(storeFields);
