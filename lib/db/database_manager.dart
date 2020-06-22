@@ -42,5 +42,4 @@ class DatabaseManager {
     });
     return docRef;
   }
-
 }
