@@ -1,25 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Item {
-  final String id;
-  final String name;
-  final int quantity;
-  final bool subsOk;
-  final List<String> substitutions;
-  final String addedBy;
-  final String lastUpdated;
-  final bool private;
-  final bool urgent;
+  String id;
+  String name;
+  int quantity;
+  bool subsOk;
+  List<String> substitutions;
+  String addedBy;
+  String lastUpdated;
+  bool private;
+  bool urgent;
 
-  Item({
-    this.id,
-    this.name,
-    this.quantity,
-    this.subsOk,
-    this.substitutions,
-    this.addedBy,
-    this.lastUpdated,
-    this.private,
-    this.urgent,
-  });
-
-
+  Item(DocumentSnapshot document) {
+    this.id = document['id'];
+    this.name = document['name'];
+    this.quantity = document['quantity'];
+    this.subsOk = document['subsOk'];
+    this.substitutions = document['substitutions'];
+    this.addedBy = document['addedBy'];
+    this.lastUpdated = document['lastUpdated'];
+    this.private = document['private'];
+    this.urgent = document['urgent'];
+  }
 }

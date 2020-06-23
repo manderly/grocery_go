@@ -6,6 +6,7 @@ class DatabaseManager {
 
   final CollectionReference shoppingLists = Firestore.instance.collection('shopping_lists');
   final CollectionReference stores = Firestore.instance.collection('stores');
+  final CollectionReference items = Firestore.instance.collection('items');
 
   Stream<QuerySnapshot> getShoppingListStream() {
     return shoppingLists.orderBy("name").snapshots();
@@ -13,6 +14,10 @@ class DatabaseManager {
 
   Stream<QuerySnapshot> getStoresStream() {
     return stores.orderBy("name").snapshots();
+  }
+
+  Stream<QuerySnapshot> getItemsStream(itemIDs) {
+    return items.where('id', whereIn: itemIDs).orderBy("name").snapshots();
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {

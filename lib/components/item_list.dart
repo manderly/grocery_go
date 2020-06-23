@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/models/item.dart';
 import 'package:grocery_go/models/shopping_list.dart';
 import 'package:grocery_go/models/store.dart';
 
@@ -44,6 +45,10 @@ class ItemList extends StatelessWidget {
               listItem = ShoppingList(list[index]);
             } else if (listType == 'store') {
               listItem = Store(list[index]);
+            } else if (listType == 'item') {
+              listItem = Item(list[index]);
+            } else {
+              print("Unhandled list item type");
             }
 
             return ListItem(item: listItem, listType: listType, count: getCount(listItem), onTap: onItemTap, onInfoTap: onInfoTap);
