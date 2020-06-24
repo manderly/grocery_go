@@ -3,9 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Item {
   String id;
   String name;
+  String date;
   int quantity;
   bool subsOk;
-  List<String> substitutions;
+  List substitutions;
   String addedBy;
   String lastUpdated;
   bool private;

@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/models/shopping_list.dart';
 import 'package:grocery_go/views/new_item.dart';
 
 class AddNew extends StatelessWidget {
-
-  final list;
   final listType;
-  AddNew({Key key, @required this.list, @required this.listType});
+  final listID;
+  final ShoppingList parentList;
 
-  goToAddNew(context) {
+  AddNew({Key key, this.listType, this.listID, this.parentList});
+
+  goToAddNew(context) async {
+    print(listType);
     if (listType == 'shopping list') {
       Navigator.pushNamed(context, '/newShoppingList');
     } else if (listType == 'store') {
       Navigator.pushNamed(context, '/newStore');
     } else if (listType == 'item') {
-      Navigator.pushNamed(context, '/newItem', arguments: NewItemArguments('abc123'));
+      final result = await Navigator.pushNamed(context, '/newItem', arguments: NewItemArguments(parentList.id, parentList.name));
+      print("result: " + result.toString());
     } else {
       print('Error, unhandled listType in goToAddNew in item_list.dart');
     }

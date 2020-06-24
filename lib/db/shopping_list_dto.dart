@@ -3,7 +3,7 @@ class ShoppingListDTO {
   String id;
   String name;
   String date;
-  List itemIDs;
+  List<String> itemIDs;
 
   String toString() {
     return 'id: $id, name: $name, date: $date, itemIDs: $itemIDs';

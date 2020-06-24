@@ -48,8 +48,7 @@ class ExistingShoppingList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     ItemListHeader(text: "Category/Aisle here"),
-                    ItemListStream(dbStream: db.getItemsStream(args.list.itemIDs), listType: 'item', onTap: _crossOff, onInfoTap: _editItem),
-                    //ItemList(list: list, listType: 'item', onItemTap: _crossOff, onInfoTap: _editItem),
+                    ItemListStream(dbStream: db.getItemsStream(args.list), listType: 'item', onTap: _crossOff, onInfoTap: _editItem, parentList: args.list),
                     ItemListHeader(text: "Crossed off"),
                     //ItemList(list: crossedOff, listType: "crossedOff", onItemTap: _addToList, onInfoTap: _editItem),
                   ],

@@ -13,8 +13,9 @@ class ItemList extends StatelessWidget {
   final String listType;
   final onItemTap;
   final onInfoTap;
+  final ShoppingList parentList;
 
-  ItemList({Key key, @required this.list, @required this.listType, @required this.onItemTap, @required this.onInfoTap});
+  ItemList({Key key, @required this.list, @required this.listType, @required this.onItemTap, @required this.onInfoTap, this.parentList});
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +36,15 @@ class ItemList extends StatelessWidget {
           if (index == list.length) {
             if (listType == 'crossedOff') {
               return DeleteAll();
-            } else { // store, shopping list
-              return AddNew(list: list, listType: listType);
+            } else if (listType == 'store' || listType == 'shopping list') {
+              return AddNew(listType: listType);
+            } else if (listType == 'item') {
+              return AddNew(listType: listType, parentList: parentList);
+            } else {
+              return Text("Invalid list type");
             }
           } else {
+
             var listItem;
 
             if (listType == 'shopping list') {
