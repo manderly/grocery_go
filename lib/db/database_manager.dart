@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:grocery_go/db/item_dto.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
 import 'package:grocery_go/db/store_dto.dart';
@@ -17,8 +18,8 @@ class DatabaseManager {
     return stores.orderBy("name").snapshots();
   }
 
-  Stream<QuerySnapshot> getItemsStream(list) {
-    return items.where('id', whereIn: list.itemIDs).orderBy("name").snapshots();
+  Stream<QuerySnapshot> getItemsStream(shoppingListID) {
+    return shoppingLists.document(shoppingListID).collection('items').snapshots();
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {
@@ -89,13 +90,11 @@ class DatabaseManager {
     }
   }
 
-  Future<DocumentReference> createItem(ItemDTO item) async {
-    DocumentReference docRef = await items.add(item.toJson());
-    items.document(docRef.documentID).updateData({'id':docRef.documentID});
-    return docRef;
+  Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
+    shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(1)});
+    DocumentReference itemDocRef = await shoppingLists.document(parentListID).collection('items').add(item.toJson());
+    return itemDocRef;
   }
-
-
 
   Future updateItem(String id, ItemDTO item) async {
     if (id != null && id.length > 0) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_go/components/item_list.dart';
 import 'package:grocery_go/components/item_list_header.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/db/database_manager.dart';
@@ -8,14 +7,14 @@ import 'package:grocery_go/models/shopping_list.dart';
 
 import 'existing_item.dart';
 
-class ExistingShoppingListArguments {
+class MainShoppingListArguments {
   final ShoppingList list;
-  ExistingShoppingListArguments(this.list);
+  MainShoppingListArguments(this.list);
 }
 
-class ExistingShoppingList extends StatelessWidget {
+class MainShoppingList extends StatelessWidget {
 
-  static const routeName = '/existingShoppingList';
+  static const routeName = '/mainShoppingList';
 
   final DatabaseManager db = DatabaseManager();
 
@@ -30,7 +29,7 @@ class ExistingShoppingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final ExistingShoppingListArguments args = ModalRoute.of(context).settings.arguments;
+    final MainShoppingListArguments args = ModalRoute.of(context).settings.arguments;
 
     _editItem(Item item) {
       Navigator.pushNamed(context, ExistingItem.routeName, arguments: ExistingItemArguments(item));
@@ -47,8 +46,8 @@ class ExistingShoppingList extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    ItemListHeader(text: "Category/Aisle here"),
-                    ItemListStream(dbStream: db.getItemsStream(args.list), listType: 'item', onTap: _crossOff, onInfoTap: _editItem, parentList: args.list),
+                    ItemListHeader(text: args.list.id),
+                    ItemListStream(dbStream: db.getItemsStream(args.list.id), listType: 'item', onTap: _crossOff, onInfoTap: _editItem, parentList: args.list),
                     ItemListHeader(text: "Crossed off"),
                     //ItemList(list: crossedOff, listType: "crossedOff", onItemTap: _addToList, onInfoTap: _editItem),
                   ],

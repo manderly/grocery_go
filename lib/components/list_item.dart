@@ -13,7 +13,11 @@ class ListItem extends StatelessWidget {
   ListItem({Key key, this.item: "Unknown", this.listType, this.count, this.onTap, this.onInfoTap});
 
   buildDateString(date) {
-    return DateFormat.yMMMd().format(DateTime.parse(date));
+    if (date != null && date.length > 0) {
+      return DateFormat.yMMMd().format(DateTime.parse(date));
+    } else {
+      return 'unknown date';
+    }
   }
 
   buildCrossedOffDate(date) {
@@ -37,7 +41,7 @@ class ListItem extends StatelessWidget {
     } else if (listType == 'store') {
       return item.address;
     } else if (listType == 'item') {
-      return 'Added by ' + item.addedBy + ' on ' + buildDateString(item.lastUpdated);
+      return 'Added by ' + (item?.addedBy ?? 'no one') + ' on ' + buildDateString(item.lastUpdated);
     } else if (listType == 'crossedOff') {
       return '' + buildCrossedOffDate(item.lastUpdated) + ' at storeName';
     } else {

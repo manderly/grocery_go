@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/views/existing_list.dart';
 
-import './components/item_list.dart';
 import './components/item_list_header.dart';
 
 import './models/shopping_list.dart';
 import './models/store.dart';
 
-import './views/existing_shopping_list.dart';
+import './views/main_shopping_list.dart';
 import './views/existing_store.dart';
 import './views/new_item.dart';
 import './views/new_shopping_list.dart';
@@ -26,7 +25,7 @@ class GroceryGoApp extends StatelessWidget {
 
     var routes = {
       ExistingList.routeName: (context) => ExistingList(),
-      ExistingShoppingList.routeName: (context) => ExistingShoppingList(),
+      MainShoppingList.routeName: (context) => MainShoppingList(),
       NewShoppingList.routeName: (context) => NewShoppingList(),
       ExistingStore.routeName: (context) => ExistingStore(),
       NewStore.routeName: (context) => NewStore(),
@@ -58,7 +57,7 @@ class _MainPageState extends State<MainPage> {
   final DatabaseManager db = DatabaseManager();
 
   _goToList(ShoppingList list) {
-    Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(list));
+    Navigator.pushNamed(context, MainShoppingList.routeName, arguments: MainShoppingListArguments(list));
   }
 
   _editStore(Store store) {
