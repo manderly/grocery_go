@@ -93,17 +93,19 @@ class DatabaseManager {
   Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
     shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(1)});
     DocumentReference itemDocRef = await shoppingLists.document(parentListID).collection('items').add(item.toJson());
+    shoppingLists.document(itemDocRef.documentID).updateData({'id':itemDocRef.documentID});
     return itemDocRef;
   }
 
-  Future updateItem(String id, ItemDTO item) async {
-    if (id != null && id.length > 0) {
-      DocumentReference docRef = items.document(id);
-      Firestore.instance.runTransaction((transaction) async {
-        await transaction.update(docRef, item.toJson());
-      }).catchError((e) {
-        print(e.toString());
-      });
+  Future updateItem(String parentListID, ItemDTO item) async {
+    print("item:" + item.toString());
+    if (parentListID != null && parentListID.length > 0) {
+      DocumentReference itemDocRef = shoppingLists.document(parentListID).collection('items').document(item.id);
+      Firestore.instance.runTransaction((Transaction tx) async {
+        await tx.update(itemDocRef, item.toJson());
+        }).catchError((e) {
+          print(e.toString());
+        });
     } else {
       print("ID is null/has no length");
     }

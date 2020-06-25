@@ -12,7 +12,7 @@ import './views/existing_store.dart';
 import './views/new_item.dart';
 import './views/new_shopping_list.dart';
 import './views/new_store.dart';
-import './views/existing_item.dart';
+import './views/edit_item.dart';
 
 import './db/database_manager.dart';
 

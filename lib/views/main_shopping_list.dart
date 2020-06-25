@@ -5,7 +5,7 @@ import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/models/item.dart';
 import 'package:grocery_go/models/shopping_list.dart';
 
-import 'existing_item.dart';
+import 'edit_item.dart';
 
 class MainShoppingListArguments {
   final ShoppingList list;
@@ -32,7 +32,7 @@ class MainShoppingList extends StatelessWidget {
     final MainShoppingListArguments args = ModalRoute.of(context).settings.arguments;
 
     _editItem(Item item) {
-      Navigator.pushNamed(context, ExistingItem.routeName, arguments: ExistingItemArguments(item));
+      Navigator.pushNamed(context, ExistingItem.routeName, arguments: EditItemArguments(item, args.list.id, args.list.name));
     }
 
     return Scaffold(

@@ -50,8 +50,6 @@ class _NewItemFormState extends State<NewItemForm> {
 
       var docRef = await db.createItem(args.parentListID, itemFields);
 
-      //db.addItemToShoppingList(args.parentListID, docRef.documentID);
-
       Navigator.of(context).pop(docRef);
     }
   }

@@ -15,6 +15,7 @@ class Item {
   Item(DocumentSnapshot document) {
     this.id = document['id'];
     this.name = document['name'];
+    this.date = document['date'];
     this.quantity = document['quantity'];
     this.subsOk = document['subsOk'];
     this.substitutions = document['substitutions'];
