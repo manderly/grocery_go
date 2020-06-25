@@ -93,7 +93,8 @@ class DatabaseManager {
   Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
     shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(1)});
     DocumentReference itemDocRef = await shoppingLists.document(parentListID).collection('items').add(item.toJson());
-    shoppingLists.document(itemDocRef.documentID).updateData({'id':itemDocRef.documentID});
+    print(itemDocRef.documentID);
+    itemDocRef.updateData({'id':itemDocRef.documentID});
     return itemDocRef;
   }
 
