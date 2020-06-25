@@ -36,11 +36,9 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
 
       if (args != null) {
         // preserve existing data from args
-        shoppingListFields.itemIDs = args.list.itemIDs;
         shoppingListFields.id = args.list.id;
         await db.updateShoppingList(args.list.id, shoppingListFields);
       } else {
-        shoppingListFields.itemIDs = new List<String>();
         await db.addShoppingList(shoppingListFields);
       }
 

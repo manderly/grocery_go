@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:grocery_go/db/item_dto.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
 import 'package:grocery_go/db/store_dto.dart';
 
@@ -13,6 +14,10 @@ class DatabaseManager {
 
   Stream<QuerySnapshot> getStoresStream() {
     return stores.orderBy("name").snapshots();
+  }
+
+  Stream<QuerySnapshot> getItemsStream(shoppingListID) {
+    return shoppingLists.document(shoppingListID).collection('items').snapshots();
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {
@@ -34,6 +39,26 @@ class DatabaseManager {
     }
   }
 
+  Future addItemToShoppingList(String listID, String itemID) async {
+    print("adding item[$itemID] to list[$listID]");
+    if (listID != null && listID.length > 0) {
+      DocumentReference docRef = shoppingLists.document(listID);
+      Firestore.instance.runTransaction((Transaction tx) async {
+        DocumentSnapshot doc = await tx.get(docRef);
+        if (doc.exists) {
+          List<String> newItemIDArr = [];
+          newItemIDArr.add(itemID);
+          await tx.update(docRef, {'itemIDs': FieldValue.arrayUnion(newItemIDArr)},);
+
+        }
+      }).catchError((e) {
+        print(e.toString());
+      });
+    } else {
+      print("List id is null/has no length");
+    }
+  }
+
   Future<DocumentReference> addStore(StoreDTO store) async {
     DocumentReference docRef = await stores.add(store.toJson());
     stores.document(docRef.documentID).updateData({'id':docRef.documentID});
@@ -48,6 +73,28 @@ class DatabaseManager {
       }).catchError((e) {
         print(e.toString());
       });
+    } else {
+      print("ID is null/has no length");
+    }
+  }
+
+  Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
+    shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(1)});
+    DocumentReference itemDocRef = await shoppingLists.document(parentListID).collection('items').add(item.toJson());
+    print(itemDocRef.documentID);
+    itemDocRef.updateData({'id':itemDocRef.documentID});
+    return itemDocRef;
+  }
+
+  Future updateItem(String parentListID, ItemDTO item) async {
+    print("item:" + item.toString());
+    if (parentListID != null && parentListID.length > 0) {
+      DocumentReference itemDocRef = shoppingLists.document(parentListID).collection('items').document(item.id);
+      Firestore.instance.runTransaction((Transaction tx) async {
+        await tx.update(itemDocRef, item.toJson());
+        }).catchError((e) {
+          print(e.toString());
+        });
     } else {
       print("ID is null/has no length");
     }

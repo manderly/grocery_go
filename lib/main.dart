@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/views/existing_list.dart';
 
-import './components/item_list.dart';
 import './components/item_list_header.dart';
 
 import './models/shopping_list.dart';
 import './models/store.dart';
 
-import './views/existing_shopping_list.dart';
+import './views/main_shopping_list.dart';
 import './views/existing_store.dart';
 import './views/new_item.dart';
 import './views/new_shopping_list.dart';
 import './views/new_store.dart';
-import './views/existing_item.dart';
+import './views/edit_item.dart';
 
 import './db/database_manager.dart';
 
@@ -25,7 +25,7 @@ class GroceryGoApp extends StatelessWidget {
 
     var routes = {
       ExistingList.routeName: (context) => ExistingList(),
-      ExistingShoppingList.routeName: (context) => ExistingShoppingList(),
+      MainShoppingList.routeName: (context) => MainShoppingList(),
       NewShoppingList.routeName: (context) => NewShoppingList(),
       ExistingStore.routeName: (context) => ExistingStore(),
       NewStore.routeName: (context) => NewStore(),
@@ -57,7 +57,7 @@ class _MainPageState extends State<MainPage> {
   final DatabaseManager db = DatabaseManager();
 
   _goToList(ShoppingList list) {
-    Navigator.pushNamed(context, ExistingShoppingList.routeName, arguments: ExistingShoppingListArguments(list));
+    Navigator.pushNamed(context, MainShoppingList.routeName, arguments: MainShoppingListArguments(list));
   }
 
   _editStore(Store store) {
@@ -86,49 +86,13 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
-                _shoppingLists(context),
+                ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
                 ItemListHeader(text: headerStores),
-                _stores(context),
+                ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
               ],
             ),
           );
         }),
-    );
-  }
-
-  Widget _shoppingLists(BuildContext context) {
-    return StreamBuilder(
-        stream: db.getShoppingListStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
-            return ItemList(list: snapshot.data.documents, listType: 'shopping list', onItemTap: _goToList, onInfoTap: _editList);
-
-          } else {
-            return Text("Error: no shopping list data");
-          }
-        }
-    );
-  }
-
-  Widget _stores(BuildContext context) {
-    return StreamBuilder(
-        stream: db.getStoresStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
-            return ItemList(list: snapshot.data.documents, listType: 'store', onItemTap: _editStore, onInfoTap: _editStore);
-
-          } else {
-            return Text("Error: no store data");
-          }
-        }
     );
   }
 }

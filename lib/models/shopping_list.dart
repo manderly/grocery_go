@@ -4,13 +4,13 @@ class ShoppingList {
   String id;
   String name;
   String listType = 'shopping list';
-  List itemIDs;
   String date;
+  int itemCount;
 
   ShoppingList(DocumentSnapshot document) {
     this.id = document['id'];
     this.name = document['name'];
-    this.itemIDs = document['itemIDs'];
     this.date = document['date'];
+    this.itemCount = document['itemCount'];
   }
 }
