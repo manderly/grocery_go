@@ -11,6 +11,7 @@ class Item {
   String lastUpdated;
   bool private;
   bool urgent;
+  bool isCrossedOff;
 
   Item(DocumentSnapshot document) {
     this.id = document['id'];
@@ -23,5 +24,6 @@ class Item {
     this.lastUpdated = document['lastUpdated'];
     this.private = document['private'];
     this.urgent = document['urgent'];
+    this.isCrossedOff = document['isCrossedOff'];
   }
 }
