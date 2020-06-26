@@ -100,4 +100,24 @@ class DatabaseManager {
     }
   }
 
+  Future updateItemCrossedOffStatus(String parentListID, String itemID, data) async {
+    if (parentListID != null && parentListID.length > 0) {
+      // adjust the shopping list's item count accordingly
+      if (data['isCrossedOff']) {
+        shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(-1)});
+      } else {
+        shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(1)});
+      }
+      // update the item itself
+      DocumentReference itemDocRef = shoppingLists.document(parentListID).collection('items').document(itemID);
+      Firestore.instance.runTransaction((Transaction tx) async {
+        await tx.update(itemDocRef, data);
+      }).catchError((e) {
+        print(e.toString());
+      });
+    } else {
+      print("ID is null/has no length");
+    }
+  }
+
 }

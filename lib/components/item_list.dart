@@ -51,7 +51,7 @@ class ItemList extends StatelessWidget {
               listItem = ShoppingList(list[index]);
             } else if (listType == 'store') {
               listItem = Store(list[index]);
-            } else if (listType == 'item') {
+            } else if (listType == 'item' || listType == 'crossedOff') {
               listItem = Item(list[index]);
             } else {
               print("Unhandled list item type");
