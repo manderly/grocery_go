@@ -17,7 +17,11 @@ class DatabaseManager {
   }
 
   Stream<QuerySnapshot> getItemsStream(shoppingListID) {
-    return shoppingLists.document(shoppingListID).collection('items').snapshots();
+    return shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: false).snapshots();
+  }
+
+  Stream<QuerySnapshot> getCrossedOffStream(shoppingListID) {
+    return shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: true).snapshots();
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {

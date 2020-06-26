@@ -89,6 +89,7 @@ class _EditItemFormState extends State<EditItemForm> {
     itemFields.subsOk = args.item.subsOk;
     itemFields.private = args.item.private;
     itemFields.urgent = args.item.urgent;
+    itemFields.isCrossedOff = args.item.isCrossedOff;
     return super.initState();
   }
 

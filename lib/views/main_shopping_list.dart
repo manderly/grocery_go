@@ -26,6 +26,10 @@ class MainShoppingList extends StatelessWidget {
     print("Add this item to the list: " + item.id);
   }
 
+  _moveBack(Item item) {
+    print("Moving this item back to the list: " + item.id);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -46,10 +50,10 @@ class MainShoppingList extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    ItemListHeader(text: args.list.id),
+                    ItemListHeader(text: args.list.id), // getCrossedOffStream
                     ItemListStream(dbStream: db.getItemsStream(args.list.id), listType: 'item', onTap: _crossOff, onInfoTap: _editItem, parentList: args.list),
                     ItemListHeader(text: "Crossed off"),
-                    //ItemList(list: crossedOff, listType: "crossedOff", onItemTap: _addToList, onInfoTap: _editItem),
+                    ItemListStream(dbStream: db.getCrossedOffStream(args.list.id), listType: 'item', onTap: _moveBack, onInfoTap: _editItem, parentList: args.list),
                   ],
                 ),
               );
