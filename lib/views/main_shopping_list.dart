@@ -51,9 +51,9 @@ class MainShoppingList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     ItemListHeader(text: args.list.id), // getCrossedOffStream
-                    ItemListStream(dbStream: db.getItemsStream(args.list.id), listType: 'item', onTap: _crossOff, onInfoTap: _editItem, parentList: args.list),
+                    ItemListStream(dbStream: db.getItemsStream(args.list.id, false), listType: 'item', onTap: _crossOff, onInfoTap: _editItem, parentList: args.list),
                     ItemListHeader(text: "Crossed off"),
-                    ItemListStream(dbStream: db.getCrossedOffStream(args.list.id), listType: 'item', onTap: _moveBack, onInfoTap: _editItem, parentList: args.list),
+                    ItemListStream(dbStream: db.getItemsStream(args.list.id, true), listType: 'item', onTap: _moveBack, onInfoTap: _editItem, parentList: args.list),
                   ],
                 ),
               );

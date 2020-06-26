@@ -16,12 +16,8 @@ class DatabaseManager {
     return stores.orderBy("name").snapshots();
   }
 
-  Stream<QuerySnapshot> getItemsStream(shoppingListID) {
-    return shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: false).snapshots();
-  }
-
-  Stream<QuerySnapshot> getCrossedOffStream(shoppingListID) {
-    return shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: true).snapshots();
+  Stream<QuerySnapshot> getItemsStream(shoppingListID, isCrossedOff) {
+    return shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: isCrossedOff).snapshots();
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {
