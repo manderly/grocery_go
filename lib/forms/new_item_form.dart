@@ -35,10 +35,6 @@ class _NewItemFormState extends State<NewItemForm> {
     if (formState.validate()) {
       formKey.currentState.save();
 
-      // the user doesn't have access to these params when they first
-      // create an item, only when they edit it
-      // set some defaults here
-      // todo: can these just be defaults in the DTO?
       itemFields.date = DateTime.now().toString();
       itemFields.lastUpdated = DateTime.now().toString();
       itemFields.addedBy = "TILCode";
@@ -47,6 +43,7 @@ class _NewItemFormState extends State<NewItemForm> {
       itemFields.private = false;
       itemFields.quantity = 1;
       itemFields.urgent = false;
+      itemFields.isCrossedOff = false;
 
       var docRef = await db.createItem(args.parentListID, itemFields);
 
