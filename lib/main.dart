@@ -18,7 +18,21 @@ import './db/database_manager.dart';
 
 void main() => runApp(GroceryGoApp());
 
-class GroceryGoApp extends StatelessWidget {
+class GroceryGoApp extends StatefulWidget {
+
+  @override
+  _GroceryGoAppState createState() => _GroceryGoAppState();
+}
+
+class _GroceryGoAppState extends State<GroceryGoApp> {
+
+  bool darkTheme = false;
+
+  void toggleTheme(bool value) {
+    setState(() {
+      darkTheme = !darkTheme;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,24 +49,28 @@ class GroceryGoApp extends StatelessWidget {
 
     return MaterialApp(
       routes: routes,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MainPage(title: 'Grocery Go!'),
+      theme: darkTheme ? ThemeData.dark() : ThemeData.light(),
+      home: MainPage(darkTheme: darkTheme, toggleTheme: toggleTheme),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
+  final darkTheme;
+  final toggleTheme;
 
-  final String title;
+  MainPage({Key key, this.darkTheme, this.toggleTheme}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _MainPageState createState() => _MainPageState(darkTheme: darkTheme, toggleTheme: toggleTheme);
 }
 
 class _MainPageState extends State<MainPage> {
+
+  final darkTheme;
+  final toggleTheme;
+
+  _MainPageState({this.darkTheme, this.toggleTheme});
 
   final DatabaseManager db = DatabaseManager();
 
@@ -76,7 +94,40 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Grocery Go'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Grocery Go',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
+              ),
+            ),
+            SwitchListTile(
+              title: Text('Dark Mode'),
+              value: darkTheme,
+              onChanged: toggleTheme,
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Account management'),
+              subtitle: Text('Logged in as TILCode')
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('App preferences'),
+            ),
+          ],
+        ),
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
