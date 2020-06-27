@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/views/existing_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './components/item_list_header.dart';
 
@@ -16,21 +17,26 @@ import './views/edit_item.dart';
 
 import './db/database_manager.dart';
 
-void main() => runApp(GroceryGoApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(GroceryGoApp(preferences: await SharedPreferences.getInstance()));
+}
 
 class GroceryGoApp extends StatefulWidget {
+  final SharedPreferences preferences;
+  GroceryGoApp({Key key, @required this.preferences}) : super(key: key);
 
   @override
   _GroceryGoAppState createState() => _GroceryGoAppState();
 }
 
 class _GroceryGoAppState extends State<GroceryGoApp> {
-
-  bool darkTheme = false;
+  static const DARK_THEME_KEY = 'darkTheme';
+  bool get darkTheme => widget.preferences.getBool(DARK_THEME_KEY) ?? false;
 
   void toggleTheme(bool value) {
     setState(() {
-      darkTheme = !darkTheme;
+      widget.preferences.setBool(DARK_THEME_KEY, !darkTheme);
     });
   }
 
