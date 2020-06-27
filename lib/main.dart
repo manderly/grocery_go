@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/views/existing_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './components/item_list_header.dart';
 
@@ -16,9 +17,28 @@ import './views/edit_item.dart';
 
 import './db/database_manager.dart';
 
-void main() => runApp(GroceryGoApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(GroceryGoApp(preferences: await SharedPreferences.getInstance()));
+}
 
-class GroceryGoApp extends StatelessWidget {
+class GroceryGoApp extends StatefulWidget {
+  final SharedPreferences preferences;
+  GroceryGoApp({Key key, @required this.preferences}) : super(key: key);
+
+  @override
+  _GroceryGoAppState createState() => _GroceryGoAppState();
+}
+
+class _GroceryGoAppState extends State<GroceryGoApp> {
+  static const DARK_THEME_KEY = 'darkTheme';
+  bool get darkTheme => widget.preferences.getBool(DARK_THEME_KEY) ?? false;
+
+  void toggleTheme(bool value) {
+    setState(() {
+      widget.preferences.setBool(DARK_THEME_KEY, !darkTheme);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,24 +55,25 @@ class GroceryGoApp extends StatelessWidget {
 
     return MaterialApp(
       routes: routes,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MainPage(title: 'Grocery Go!'),
+      theme: darkTheme ? ThemeData.dark() : ThemeData.light(),
+      home: MainPage(darkTheme: darkTheme, toggleTheme: toggleTheme),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
+  final darkTheme;
+  final toggleTheme;
 
-  final String title;
+  MainPage({Key key, this.darkTheme, this.toggleTheme}) : super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+
+  _MainPageState();
 
   final DatabaseManager db = DatabaseManager();
 
@@ -76,7 +97,40 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Grocery Go'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Grocery Go',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
+              ),
+            ),
+            SwitchListTile(
+              title: Text('Dark Mode'),
+              value: widget.darkTheme,
+              onChanged: widget.toggleTheme,
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Account management'),
+              subtitle: Text('Logged in as TILCode')
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('App preferences'),
+            ),
+          ],
+        ),
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
