@@ -62,15 +62,12 @@ class MainPage extends StatefulWidget {
   MainPage({Key key, this.darkTheme, this.toggleTheme}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState(darkTheme: darkTheme, toggleTheme: toggleTheme);
+  _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
 
-  final darkTheme;
-  final toggleTheme;
-
-  _MainPageState({this.darkTheme, this.toggleTheme});
+  _MainPageState();
 
   final DatabaseManager db = DatabaseManager();
 
@@ -114,8 +111,8 @@ class _MainPageState extends State<MainPage> {
             ),
             SwitchListTile(
               title: Text('Dark Mode'),
-              value: darkTheme,
-              onChanged: toggleTheme,
+              value: widget.darkTheme,
+              onChanged: widget.toggleTheme,
             ),
             ListTile(
               leading: Icon(Icons.account_circle),
