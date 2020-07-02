@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/components/linked_entities_list.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/store_dto.dart';
 
@@ -69,17 +70,21 @@ class _StoreFormState extends State<StoreForm> {
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: TextFormField(
-                autofocus: false,
-                initialValue: (args?.store?.address),
-                decoration: InputDecoration(
-                    labelText: 'Location (optional)',
-                    border: OutlineInputBorder()
+            child: Column(
+              children: [
+                TextFormField(
+                  autofocus: false,
+                  initialValue: (args?.store?.address),
+                  decoration: InputDecoration(
+                      labelText: 'Location (optional)',
+                      border: OutlineInputBorder()
+                  ),
+                  validator: (value) => validateStringInput(value),
+                  onSaved: (value) {
+                    storeFields.address = value;
+                  }
                 ),
-                validator: (value) => validateStringInput(value),
-                onSaved: (value) {
-                  storeFields.address = value;
-                }
+              ],
             ),
           ),
           RaisedButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/components/linked_entities_list.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
 
@@ -68,6 +69,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
                 }
             ),
           ),
+          LinkedEntitiesList(args?.list?.stores),
           RaisedButton(
             onPressed: () => updateShoppingList(context),
             child: Text('Save shopping list'),
