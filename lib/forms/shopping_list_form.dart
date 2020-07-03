@@ -69,7 +69,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
                 }
             ),
           ),
-          LinkedEntitiesList(args?.list?.stores),
+          LinkedEntitiesList(args?.list?.stores, "shopping list", "Stores"),
           RaisedButton(
             onPressed: () => updateShoppingList(context),
             child: Text('Save shopping list'),
