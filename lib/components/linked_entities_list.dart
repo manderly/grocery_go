@@ -26,13 +26,10 @@ class LinkedEntitiesList extends StatelessWidget {
   }
 
   _entityList(list) {
-    if (list != null && list.length > 0) {
-      return list.map((item) => Text(item)).toList();
-    } else {
-      var shortList = List();
-      shortList.add(Text("This $listType is not attached to any $entities yet."));
-      return shortList;
-    }
+    var shortList = List();
+    shortList.add(Text("This $listType is not attached to any $entities yet."));
+
+    return list?.map((item) => Text(item))?.toList() ?? shortList;
   }
 
   _manageLinksButton() {
