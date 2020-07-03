@@ -30,7 +30,7 @@ class LinkedEntitiesList extends StatelessWidget {
     var shortList = List();
     shortList.add(Text("This $listType is not attached to any $entities yet."));
     // if 'list' is empty, default to shortList which is guaranteed to have something
-    return list?.map((item) => Text(item))?.toList() ?? shortList;
+    return list?.map((item) => Text(item, style: TextStyle(height: 1.6)))?.toList() ?? shortList;
   }
 
   _manageLinksButton() {

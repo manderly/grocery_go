@@ -51,10 +51,25 @@ class _StoreFormState extends State<StoreForm> {
 
     return Form(
       key: formKey,
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            _formFields(),
+            _saveButton(),
+          ]
+        )
+      )
+    );
+  }
+
+  _formFields() {
+    return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: TextFormField(
                 autofocus: true,
                 initialValue: (args?.store?.name),
@@ -69,29 +84,40 @@ class _StoreFormState extends State<StoreForm> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: Column(
               children: [
                 TextFormField(
-                  autofocus: false,
-                  initialValue: (args?.store?.address),
-                  decoration: InputDecoration(
-                      labelText: 'Location (optional)',
-                      border: OutlineInputBorder()
-                  ),
-                  validator: (value) => validateStringInput(value),
-                  onSaved: (value) {
-                    storeFields.address = value;
-                  }
+                    autofocus: false,
+                    initialValue: (args?.store?.address),
+                    decoration: InputDecoration(
+                        labelText: 'Location (optional)',
+                        border: OutlineInputBorder()
+                    ),
+                    validator: (value) => validateStringInput(value),
+                    onSaved: (value) {
+                      storeFields.address = value;
+                    }
                 ),
               ],
             ),
           ),
+          LinkedEntitiesList(args?.store?.shoppingLists, "store", "Shopping Lists"),
+        ],
+      ),
+    );
+  }
+
+  _saveButton() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           RaisedButton(
             onPressed: () => updateStore(context),
             child: Text('Save store'),
           ),
-        ],
+        ]
       ),
     );
   }
