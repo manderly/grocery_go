@@ -52,10 +52,25 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
 
     return Form(
       key: formKey,
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            _formFields(),
+            _saveButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _formFields() {
+    return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: TextFormField(
                 autofocus: true,
                 initialValue: (args?.list?.name),
@@ -70,11 +85,21 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
             ),
           ),
           LinkedEntitiesList(args?.list?.stores, "shopping list", "Stores"),
+        ],
+      ),
+    );
+  }
+
+  _saveButton() {
+    return Expanded(
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           RaisedButton(
             onPressed: () => updateShoppingList(context),
             child: Text('Save shopping list'),
           ),
-        ],
+        ]
       ),
     );
   }

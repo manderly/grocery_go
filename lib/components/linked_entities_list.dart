@@ -11,8 +11,9 @@ class LinkedEntitiesList extends StatelessWidget {
   Widget build(BuildContext context) {
     var _list = linkedEntities != null ? linkedEntities.values.toList() : [];
 
-    return Container(
+    return Flexible(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _listTitle(),
           ..._entityList(_list),
@@ -22,13 +23,13 @@ class LinkedEntitiesList extends StatelessWidget {
     }
 
   _listTitle() {
-    return Text("$entities", style: TextStyle(fontSize:20));
+    return Text("$entities", style: TextStyle(fontSize:16, fontWeight: FontWeight.bold));
   }
 
   _entityList(list) {
     var shortList = List();
     shortList.add(Text("This $listType is not attached to any $entities yet."));
-
+    // if 'list' is empty, default to shortList which is guaranteed to have something
     return list?.map((item) => Text(item))?.toList() ?? shortList;
   }
 
@@ -36,6 +37,8 @@ class LinkedEntitiesList extends StatelessWidget {
     return FlatButton(
       onPressed: () => print("pressed"),
       child: Text("Add/Remove $entities"),
+      textColor:Colors.blue,
+      padding: EdgeInsets.all(0),
     );
   }
 }
