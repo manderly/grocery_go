@@ -16,7 +16,16 @@ class LinkedEntitiesList extends StatelessWidget {
   Widget build(BuildContext context) {
 
     _goToManageLinks() {
-      Navigator.pushNamed(context, ManageLinks.routeName, arguments: ManageLinksArguments(dbStream: db.getStoresStream(), linkedEntities: linkedEntities, parentID: parentID, parentType: listType));
+      var stream;
+      if (listType == "shopping list") {
+        stream = db.getStoresStream();
+      } else if (listType == "store") {
+        stream = db.getShoppingListStream();
+      } else {
+        print("Error: unrecognized list type in linked_entities_list.dart");
+      }
+
+      Navigator.pushNamed(context, ManageLinks.routeName, arguments: ManageLinksArguments(dbStream: stream, linkedEntities: linkedEntities, parentID: parentID, parentType: listType));
     }
 
     var _list = linkedEntities != null ? linkedEntities.values.toList() : [];
