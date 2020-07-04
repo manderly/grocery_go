@@ -41,6 +41,8 @@ class _ToggleListState extends State<ToggleList> {
   @override
   Widget build(BuildContext context) {
 
+    print(widget.linkedEntities);
+
     return ListView.builder(
         shrinkWrap: true, // gives it a size
         itemCount: widget.list.length,

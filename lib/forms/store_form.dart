@@ -64,48 +64,62 @@ class _StoreFormState extends State<StoreForm> {
   }
 
   _formFields() {
+    List<Widget> fields = [_nameField(), _addressField()];
+    if (widget.store?.id != null) {
+      fields.add(_linkedEntities());
+    }
+
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        children: fields,
+      ),
+    );
+  }
+
+  _nameField() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+      child: TextFormField(
+          autofocus: true,
+          initialValue: widget.store?.name ?? '',
+          decoration: InputDecoration(
+              labelText: 'Store name',
+              border: OutlineInputBorder()
+          ),
+          validator: (value) => validateStringInput(value),
+          onSaved: (value) {
+            storeFields.name = value;
+          }
+      ),
+    );
+  }
+
+  _addressField() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+      child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: TextFormField(
-                autofocus: true,
-                initialValue: (widget.store.name),
-                decoration: InputDecoration(
-                    labelText: 'Store name',
-                    border: OutlineInputBorder()
-                ),
-                validator: (value) => validateStringInput(value),
-                onSaved: (value) {
-                  storeFields.name = value;
-                }
-            ),
+          TextFormField(
+              autofocus: false,
+              initialValue: widget.store?.address ?? '',
+              decoration: InputDecoration(
+                  labelText: 'Location (optional)',
+                  border: OutlineInputBorder()
+              ),
+              validator: (value) => validateStringInput(value),
+              onSaved: (value) {
+                storeFields.address = value;
+              }
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: Column(
-              children: [
-                TextFormField(
-                    autofocus: false,
-                    initialValue: (widget.store.address),
-                    decoration: InputDecoration(
-                        labelText: 'Location (optional)',
-                        border: OutlineInputBorder()
-                    ),
-                    validator: (value) => validateStringInput(value),
-                    onSaved: (value) {
-                      storeFields.address = value;
-                    }
-                ),
-              ],
-            ),
-          ),
-          LinkedEntitiesList(widget.store.id, "store", widget.store.shoppingLists, "Shopping Lists"),
         ],
       ),
     );
+  }
+
+  _linkedEntities() {
+    return LinkedEntitiesList(
+        widget.store.id, "store", widget.store.shoppingLists, "Shopping Lists");
   }
 
   _saveButton() {

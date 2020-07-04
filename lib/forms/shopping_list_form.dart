@@ -65,29 +65,40 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
   }
 
   _formFields() {
+    List<Widget> fields = [_nameField()];
+    if (widget.shoppingList?.id != null) {
+      fields.add(_linkedEntities());
+    }
+
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: TextFormField(
-                autofocus: true,
-                initialValue: (widget.shoppingList.name),
-                decoration: InputDecoration(
-                    labelText: 'List name',
-                    border: OutlineInputBorder()
-                ),
-                validator: (value) => validateStringInput(value),
-                onSaved: (value) {
-                  shoppingListFields.name = value;
-                }
-            ),
-          ),
-          LinkedEntitiesList(widget.shoppingList.id, "shopping list", widget.shoppingList.stores, "Stores"),
-        ],
+        children: fields,
       ),
     );
+  }
+
+  _nameField() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+      child: TextFormField(
+          autofocus: true,
+          initialValue: widget.shoppingList?.name ?? '',
+          decoration: InputDecoration(
+              labelText: 'List name',
+              border: OutlineInputBorder()
+          ),
+          validator: (value) => validateStringInput(value),
+          onSaved: (value) {
+            shoppingListFields.name = value;
+          }
+      ),
+    );
+  }
+
+  _linkedEntities() {
+    return LinkedEntitiesList(
+        widget.shoppingList.id, "shopping list", widget.shoppingList.stores, "Stores");
   }
 
   _saveButton() {
