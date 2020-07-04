@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_go/components/linked_entities_list.dart';
+import 'package:grocery_go/forms/components/linked_entities_list.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/store_dto.dart';
+import 'package:grocery_go/models/store.dart';
 
 class StoreForm extends StatefulWidget {
-  final args;
+  final Store store;
 
-  StoreForm({this.args});
+  StoreForm({this.store});
 
   @override
-  _StoreFormState createState() => _StoreFormState(args);
+  _StoreFormState createState() => _StoreFormState();
 }
 
 class _StoreFormState extends State<StoreForm> {
 
-  final args;
-  _StoreFormState(this.args);
+  _StoreFormState();
 
   final formKey = GlobalKey<FormState>();
   final DatabaseManager db = DatabaseManager();
@@ -35,9 +35,9 @@ class _StoreFormState extends State<StoreForm> {
       formKey.currentState.save();
       storeFields.date = DateTime.now().toString();
 
-      if (args != null) {
-        storeFields.id = args.store.id;
-        await db.updateStore(args.store.id, storeFields);
+      if (widget.store != null) {
+        storeFields.id = widget.store.id;
+        await db.updateStore(widget.store.id, storeFields);
       } else {
         await db.addStore(storeFields);
       }
@@ -72,7 +72,7 @@ class _StoreFormState extends State<StoreForm> {
             padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: TextFormField(
                 autofocus: true,
-                initialValue: (args?.store?.name),
+                initialValue: (widget.store.name),
                 decoration: InputDecoration(
                     labelText: 'Store name',
                     border: OutlineInputBorder()
@@ -89,7 +89,7 @@ class _StoreFormState extends State<StoreForm> {
               children: [
                 TextFormField(
                     autofocus: false,
-                    initialValue: (args?.store?.address),
+                    initialValue: (widget.store.address),
                     decoration: InputDecoration(
                         labelText: 'Location (optional)',
                         border: OutlineInputBorder()
@@ -102,7 +102,7 @@ class _StoreFormState extends State<StoreForm> {
               ],
             ),
           ),
-          LinkedEntitiesList(args?.store?.shoppingLists, "store", "Shopping Lists"),
+          LinkedEntitiesList(widget.store.id, "store", widget.store.shoppingLists, "Shopping Lists"),
         ],
       ),
     );

@@ -120,4 +120,22 @@ class DatabaseManager {
     }
   }
 
+  Future updateStoreLink(String parentListID, String entityID, bool val) async {
+    DocumentReference shoppingListRef = shoppingLists.document(parentListID);
+    shoppingListRef.setData({
+      "stores": {
+        {entityID}:{val}
+      }
+    });
+  }
+
+  Future updateShoppingListLink(String parentStoreID, String entityID, bool val) async {
+    DocumentReference storeRef = stores.document(parentStoreID);
+    storeRef.setData({
+      "shoppingLists": {
+        {entityID}:{val}
+      }
+    });
+  }
+
 }

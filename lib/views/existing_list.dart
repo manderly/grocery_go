@@ -4,6 +4,7 @@ import 'package:grocery_go/models/shopping_list.dart';
 
 class ExistingListArguments {
   final ShoppingList list;
+
   ExistingListArguments(this.list);
 }
 
@@ -28,7 +29,7 @@ class _ExistingListState extends State<ExistingList> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: ShoppingListForm(args: args),
+          child: ShoppingListForm(shoppingList: args.list),
         ),
       ),
     );

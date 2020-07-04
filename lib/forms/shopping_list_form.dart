@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_go/components/linked_entities_list.dart';
+import 'package:grocery_go/forms/components/linked_entities_list.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/shopping_list_dto.dart';
+import 'package:grocery_go/models/shopping_list.dart';
 
 class ShoppingListForm extends StatefulWidget {
-  final args;
+  final ShoppingList shoppingList; // see model for full list of properties
 
-  ShoppingListForm({this.args});
+  ShoppingListForm({this.shoppingList});
 
   @override
-  _ShoppingListFormState createState() => _ShoppingListFormState(args);
+  _ShoppingListFormState createState() => _ShoppingListFormState();
 }
 
 class _ShoppingListFormState extends State<ShoppingListForm> {
 
-  final args;
-  _ShoppingListFormState(this.args);
+  _ShoppingListFormState();
 
   final formKey = GlobalKey<FormState>();
   final DatabaseManager db = DatabaseManager();
@@ -35,10 +35,10 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
       formKey.currentState.save();
       shoppingListFields.date = DateTime.now().toString();
 
-      if (args != null) {
+      if (widget.shoppingList != null) {
         // preserve existing data from args
-        shoppingListFields.id = args.list.id;
-        await db.updateShoppingList(args.list.id, shoppingListFields);
+        shoppingListFields.id = widget.shoppingList.id;
+        await db.updateShoppingList(widget.shoppingList.id, shoppingListFields);
       } else {
         await db.addShoppingList(shoppingListFields);
       }
@@ -73,7 +73,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
             padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: TextFormField(
                 autofocus: true,
-                initialValue: (args?.list?.name),
+                initialValue: (widget.shoppingList.name),
                 decoration: InputDecoration(
                     labelText: 'List name',
                     border: OutlineInputBorder()
@@ -84,7 +84,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
                 }
             ),
           ),
-          LinkedEntitiesList(args?.list?.stores, "shopping list", "Stores"),
+          LinkedEntitiesList(widget.shoppingList.id, "shopping list", widget.shoppingList.stores, "Stores"),
         ],
       ),
     );

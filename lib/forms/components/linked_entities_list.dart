@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_go/views/manage_links.dart';
+import '../../db/database_manager.dart';
 
 class LinkedEntitiesList extends StatelessWidget {
-  final linkedEntities;
+  final String parentID;
   final String listType;
+  final linkedEntities;
   final String entities;
 
-  LinkedEntitiesList(this.linkedEntities, this.listType, this.entities);
+  LinkedEntitiesList(this.parentID, this.listType, this.linkedEntities, this.entities);
+
+  final DatabaseManager db = DatabaseManager();
 
   @override
   Widget build(BuildContext context) {
+
+    _goToManageLinks() {
+      Navigator.pushNamed(context, ManageLinks.routeName, arguments: ManageLinksArguments(dbStream: db.getStoresStream(), linkedEntities: linkedEntities, parentID: parentID, parentType: listType));
+    }
+
     var _list = linkedEntities != null ? linkedEntities.values.toList() : [];
 
     return Flexible(
@@ -17,7 +27,7 @@ class LinkedEntitiesList extends StatelessWidget {
         children: <Widget>[
           _listTitle(),
           ..._entityList(_list),
-          _manageLinksButton(),
+          _manageLinksButton(_goToManageLinks),
         ],
       ));
     }
@@ -33,9 +43,10 @@ class LinkedEntitiesList extends StatelessWidget {
     return list?.map((item) => Text(item, style: TextStyle(height: 1.6)))?.toList() ?? shortList;
   }
 
-  _manageLinksButton() {
+  _manageLinksButton(onPressedAction) {
+
     return FlatButton(
-      onPressed: () => print("pressed"),
+      onPressed: () => onPressedAction(),
       child: Text("Add/Remove $entities"),
       textColor:Colors.blue,
       padding: EdgeInsets.all(0),
