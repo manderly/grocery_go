@@ -121,6 +121,7 @@ class DatabaseManager {
   }
 
   Future updateStoreLink(String parentListID, String entityID, bool val) async {
+    print("Changing $entityID to ${val.toString()}");
     DocumentReference shoppingListRef = shoppingLists.document(parentListID);
     shoppingListRef.setData({
       "stores": {
@@ -130,6 +131,7 @@ class DatabaseManager {
   }
 
   Future updateShoppingListLink(String parentStoreID, String entityID, bool val) async {
+    print("Changing $entityID to ${val.toString()}");
     DocumentReference storeRef = stores.document(parentStoreID);
     storeRef.setData({
       "shoppingLists": {

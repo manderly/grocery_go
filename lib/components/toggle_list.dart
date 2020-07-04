@@ -30,8 +30,8 @@ class _ToggleListState extends State<ToggleList> {
   final DatabaseManager db = DatabaseManager();
 
   toggleItem(entityID, val) {
-    print("Changing $entityID to ${val.toString()}");
-    if (widget.parentType == "shoppingList") {
+    print(widget.parentType);
+    if (widget.parentType == "shopping list") {
       db.updateStoreLink(widget.parentID, entityID, val);
     } else if (widget.parentType == "store") {
       db.updateShoppingListLink(widget.parentID, entityID, val);
@@ -51,7 +51,7 @@ class _ToggleListState extends State<ToggleList> {
 
           return SwitchListTile(
             title: Text(item.name),
-            value: widget.linkedEntities.containsKey(item.id) ? true : false,
+            value: widget.linkedEntities?.containsKey(item.id) ?? false,
             onChanged: (bool value) => toggleItem(item.id, value),
           );
         }
