@@ -10,6 +10,6 @@ class Store {
     this.id = document['id'];
     this.name = document['name'];
     this.address = document['address'];
-    this.shoppingLists = document['stores'];
+    this.shoppingLists = document['shoppingLists'];
   }
 }

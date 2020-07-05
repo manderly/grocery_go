@@ -10,14 +10,12 @@ class AddNew extends StatelessWidget {
   AddNew({Key key, this.listType, this.listID, this.parentList});
 
   goToAddNew(context) async {
-    print(listType);
     if (listType == 'shopping list') {
       Navigator.pushNamed(context, '/newShoppingList');
     } else if (listType == 'store') {
       Navigator.pushNamed(context, '/newStore');
     } else if (listType == 'item') {
       final result = await Navigator.pushNamed(context, '/newItem', arguments: NewItemArguments(parentList.id, parentList.name));
-      print("result: " + result.toString());
     } else {
       print('Error, unhandled listType in goToAddNew in item_list.dart');
     }

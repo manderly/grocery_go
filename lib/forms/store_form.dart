@@ -65,6 +65,7 @@ class _StoreFormState extends State<StoreForm> {
 
   _formFields() {
     List<Widget> fields = [_nameField(), _addressField()];
+    // if we're editing an existing store, add the linked shopping lists
     if (widget.store?.id != null) {
       fields.add(_linkedEntities());
     }

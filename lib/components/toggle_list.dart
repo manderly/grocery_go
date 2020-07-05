@@ -30,8 +30,6 @@ class _ToggleListState extends State<ToggleList> {
   final DatabaseManager db = DatabaseManager();
 
   toggleItem(entityID, entityName, value) {
-    print("Toggling " + entityID + " " + value.toString());
-    print(widget.linkedEntities.toString());
 
     if (widget.linkedEntities == null) {
         widget.linkedEntities = Map();
@@ -57,8 +55,6 @@ class _ToggleListState extends State<ToggleList> {
 
   @override
   Widget build(BuildContext context) {
-
-    print(widget.linkedEntities);
 
     return ListView.builder(
         shrinkWrap: true, // gives it a size
