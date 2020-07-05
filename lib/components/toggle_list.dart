@@ -5,10 +5,12 @@ import 'package:grocery_go/db/database_manager.dart';
 class LinkedEntity {
   String id;
   String name;
+  String address;
 
   LinkedEntity(DocumentSnapshot document) {
     this.id = document['id'];
     this.name = document['name'];
+    this.address = document['address'] ?? '';
   }
 }
 
@@ -58,7 +60,6 @@ class _ToggleListState extends State<ToggleList> {
       // if we're editing a store, then the parent ID is the store ID and the entity is the shopping list
       db.updateStoreShoppingListLink(entityID, widget.parentID, entityName, widget.parentName, value);
     }
-
   }
 
   @override
@@ -69,9 +70,9 @@ class _ToggleListState extends State<ToggleList> {
         itemCount: widget.list.length,
         itemBuilder: (BuildContext context, int index) {
           var item = LinkedEntity(widget.list[index]);
-
+          var itemName = item.address.length > 0 ? item.name + ' (${item.address})' : item.name;
           return SwitchListTile(
-            title: Text(item.name),
+            title: Text(itemName),
             value: widget.linkedEntities?.containsKey(item.id) ?? false,
             onChanged: (bool value) => toggleItem(item.id, item.name, value),
           );
