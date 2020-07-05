@@ -6,7 +6,7 @@ class LinkedEntitiesList extends StatelessWidget {
   final String parentID;
   final String parentName;
   final String listType;
-  final linkedEntities;
+  final Map linkedEntities;
   final String entities;
 
   LinkedEntitiesList(this.parentID, this.listType, this.parentName, this.linkedEntities, this.entities);
@@ -30,6 +30,7 @@ class LinkedEntitiesList extends StatelessWidget {
     }
 
     var _list = linkedEntities != null ? linkedEntities.values.toList() : [];
+    print(_list);
 
     return Container(
       height:300,

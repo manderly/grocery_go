@@ -45,7 +45,6 @@ class _ToggleListState extends State<ToggleList> {
         widget.linkedEntities.remove(entityID);
       });
     } else {
-      print("adding entity");
       setState(() {
         widget.linkedEntities[entityID] = entityName;
       });
@@ -53,6 +52,7 @@ class _ToggleListState extends State<ToggleList> {
 
     // update in database
     // method params: (shoppingListID, storeID, shoppingListName, storeName, value)
+
     if (widget.parentType == "shopping list") {
       // if we're editing a shopping list then the parent ID is the list ID and the entity is the store
       db.updateStoreShoppingListLink(widget.parentID, entityID, widget.parentName, entityName, value);
@@ -74,7 +74,7 @@ class _ToggleListState extends State<ToggleList> {
           return SwitchListTile(
             title: Text(itemName),
             value: widget.linkedEntities?.containsKey(item.id) ?? false,
-            onChanged: (bool value) => toggleItem(item.id, item.name, value),
+            onChanged: (bool value) => toggleItem(item.id, itemName, value),
           );
         }
     );
