@@ -16,10 +16,11 @@ class ToggleList extends StatefulWidget {
 
   final String parentType;
   final String parentID;
+  final String parentName;
   final List list;
   Map linkedEntities;
 
-  ToggleList({Key key, @required this.parentType, @required this.parentID, @required this.list, @required this.linkedEntities});
+  ToggleList({Key key, @required this.parentType, @required this.parentID, @required this.parentName, @required this.list, @required this.linkedEntities});
 
   @override
   _ToggleListState createState() => _ToggleListState();
@@ -32,6 +33,7 @@ class _ToggleListState extends State<ToggleList> {
   toggleItem(entityID, entityName, value) {
 
     if (widget.linkedEntities == null) {
+      print("linkedEntities is null");
         widget.linkedEntities = Map();
     }
 
@@ -41,16 +43,22 @@ class _ToggleListState extends State<ToggleList> {
         widget.linkedEntities.remove(entityID);
       });
     } else {
+      print("adding entity");
       setState(() {
         widget.linkedEntities[entityID] = entityName;
       });
     }
+
     // update in database
+    // method params: (shoppingListID, storeID, shoppingListName, storeName, value)
     if (widget.parentType == "shopping list") {
-      db.updateStoreLink(widget.parentID, entityID, entityName, value);
+      // if we're editing a shopping list then the parent ID is the list ID and the entity is the store
+      db.updateStoreShoppingListLink(widget.parentID, entityID, widget.parentName, entityName, value);
     } else if (widget.parentType == "store") {
-      db.updateShoppingListLink(widget.parentID, entityID, entityName, value);
+      // if we're editing a store, then the parent ID is the store ID and the entity is the shopping list
+      db.updateStoreShoppingListLink(entityID, widget.parentID, entityName, widget.parentName, value);
     }
+
   }
 
   @override

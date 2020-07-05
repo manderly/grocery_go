@@ -120,14 +120,14 @@ class DatabaseManager {
     }
   }
 
-  Future updateStoreLink(String parentListID, String entityID, String name, bool val) async {
-    DocumentReference shoppingListRef = shoppingLists.document(parentListID);
-    val == true ? shoppingListRef.updateData({'stores.$entityID': name}) : shoppingListRef.updateData({'stores.$entityID': FieldValue.delete()});
-  }
+  Future updateStoreShoppingListLink(String shoppingListID, String storeID, String shoppingListName, String storeName, bool val) async {
+    // add this store to the specified shopping list
+    DocumentReference shoppingListRef = shoppingLists.document(shoppingListID);
+    val == true ? shoppingListRef.updateData({'stores.$storeID': storeName}) : shoppingListRef.updateData({'stores.$storeID': FieldValue.delete()});
 
-  Future updateShoppingListLink(String parentStoreID, String entityID, String name, bool val) async {
-    DocumentReference storeRef =  stores.document(parentStoreID);
-    val == true ? storeRef.updateData({'shoppingLists.$entityID': name}) : storeRef.updateData({'shoppingLists.$entityID': FieldValue.delete()});
+    // and add this shopping list to the specified store
+    DocumentReference storeRef =  stores.document(storeID);
+    val == true ? storeRef.updateData({'shoppingLists.$shoppingListID': shoppingListName}) : storeRef.updateData({'shoppingLists.$shoppingListID': FieldValue.delete()});
   }
 
 }

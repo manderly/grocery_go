@@ -40,6 +40,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
         shoppingListFields.id = widget.shoppingList.id;
         await db.updateShoppingList(widget.shoppingList.id, shoppingListFields);
       } else {
+        shoppingListFields.stores = Map();
         await db.addShoppingList(shoppingListFields);
       }
 
@@ -71,7 +72,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
       fields.add(_linkedEntities());
     }
 
-    return Expanded(
+    return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: fields,
@@ -99,7 +100,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
 
   _linkedEntities() {
     return LinkedEntitiesList(
-        widget.shoppingList.id, "shopping list", widget.shoppingList.stores, "Stores");
+        widget.shoppingList.id, "shopping list", widget.shoppingList.name, widget.shoppingList.stores, "Stores");
   }
 
   _saveButton() {

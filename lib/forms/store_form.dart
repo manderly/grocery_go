@@ -39,6 +39,7 @@ class _StoreFormState extends State<StoreForm> {
         storeFields.id = widget.store.id;
         await db.updateStore(widget.store.id, storeFields);
       } else {
+        storeFields.shoppingLists = Map();
         await db.addStore(storeFields);
       }
 
@@ -70,7 +71,7 @@ class _StoreFormState extends State<StoreForm> {
       fields.add(_linkedEntities());
     }
 
-    return Expanded(
+    return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: fields,
@@ -120,7 +121,7 @@ class _StoreFormState extends State<StoreForm> {
 
   _linkedEntities() {
     return LinkedEntitiesList(
-        widget.store.id, "store", widget.store.shoppingLists, "Shopping Lists");
+        widget.store.id, "store", widget.store.name, widget.store.shoppingLists, "Shopping Lists");
   }
 
   _saveButton() {

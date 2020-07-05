@@ -5,9 +5,10 @@ class ManageLinksArguments {
   final dbStream;
   final linkedEntities;
   final String parentID;
+  final String parentName;
   final String parentType;
 
-  ManageLinksArguments({this.dbStream, this.linkedEntities, this.parentID, this.parentType});
+  ManageLinksArguments({this.dbStream, this.linkedEntities, this.parentID, this.parentName, this.parentType});
 }
 
 class ManageLinks extends StatefulWidget {
@@ -42,7 +43,7 @@ class _ManageLinks extends State<ManageLinks> {
                   return Text('Error: ${snapshot.error}');
                 }
                 if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
-                  return ToggleList(parentType: args.parentType, parentID: args.parentID, list: snapshot.data.documents, linkedEntities: args.linkedEntities);
+                  return ToggleList(parentType: args.parentType, parentID: args.parentID, parentName: args.parentName, list: snapshot.data.documents, linkedEntities: args.linkedEntities);
                 } else {
                   return Column(
                     children: [
