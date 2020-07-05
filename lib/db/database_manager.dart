@@ -120,24 +120,14 @@ class DatabaseManager {
     }
   }
 
-  Future updateStoreLink(String parentListID, String entityID, bool val) async {
-    print("Changing $entityID to ${val.toString()}");
+  Future updateStoreLink(String parentListID, String entityID, String name, bool val) async {
     DocumentReference shoppingListRef = shoppingLists.document(parentListID);
-    shoppingListRef.setData({
-      "stores": {
-        {entityID}:{val}
-      }
-    });
+    val == true ? shoppingListRef.updateData({'stores.$entityID': name}) : shoppingListRef.updateData({'stores.$entityID': FieldValue.delete()});
   }
 
-  Future updateShoppingListLink(String parentStoreID, String entityID, bool val) async {
-    print("Changing $entityID to ${val.toString()}");
-    DocumentReference storeRef = stores.document(parentStoreID);
-    storeRef.setData({
-      "shoppingLists": {
-        {entityID}:{val}
-      }
-    });
+  Future updateShoppingListLink(String parentStoreID, String entityID, String name, bool val) async {
+    DocumentReference storeRef =  stores.document(parentStoreID);
+    val == true ? storeRef.updateData({'shoppingLists.$entityID': name}) : storeRef.updateData({'shoppingLists.$entityID': FieldValue.delete()});
   }
 
 }
