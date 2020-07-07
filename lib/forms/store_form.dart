@@ -37,6 +37,7 @@ class _StoreFormState extends State<StoreForm> {
 
       if (widget.store != null) {
         storeFields.id = widget.store.id;
+        storeFields.shoppingLists = widget.store.shoppingLists;
         await db.updateStore(widget.store.id, storeFields);
       } else {
         storeFields.shoppingLists = Map();

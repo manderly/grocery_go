@@ -38,6 +38,7 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
       if (widget.shoppingList != null) {
         // preserve existing data from args
         shoppingListFields.id = widget.shoppingList.id;
+        shoppingListFields.stores = widget.shoppingList.stores;
         await db.updateShoppingList(widget.shoppingList.id, shoppingListFields);
       } else {
         shoppingListFields.stores = Map();
