@@ -73,9 +73,23 @@ class DatabaseManager {
       }).catchError((e) {
         print(e.toString());
       });
+      updateLinkedShoppingLists(store.id, store.name + " (" + store.address + ")");
     } else {
       print("ID is null/has no length");
     }
+  }
+
+  Future updateLinkedShoppingLists(storeID, newName) async {
+    // update all the shopping lists's "stores" maps to use the new store name
+    await shoppingLists
+        .getDocuments()
+        .then((querySnapshot) => {
+          querySnapshot.documents.forEach((doc) => {
+            if (doc.data['stores'][storeID] != null) { // can't use ['stores.$storeID']
+              doc.reference.updateData({'stores.$storeID': newName})
+            }
+          })
+        });
   }
 
   Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
