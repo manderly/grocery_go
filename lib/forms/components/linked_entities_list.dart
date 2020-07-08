@@ -30,7 +30,6 @@ class LinkedEntitiesList extends StatelessWidget {
     }
 
     var _list = linkedEntities != null ? linkedEntities.values.toList() : [];
-    print(_list);
 
     return Container(
       height:300,
