@@ -30,8 +30,6 @@ class _NewItemFormState extends State<NewItemForm> {
   void saveItem(BuildContext context) async {
     final formState = formKey.currentState;
 
-    print(args);
-
     if (formState.validate()) {
       formKey.currentState.save();
 

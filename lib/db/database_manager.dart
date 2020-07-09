@@ -34,9 +34,23 @@ class DatabaseManager {
       }).catchError((e) {
         print(e.toString());
       });
+      updateLinkedStores(shoppingList.id, shoppingList.name);
     } else {
       print("ID is null/has no length");
     }
+  }
+
+  Future updateLinkedStores(shoppingListID, newName) async {
+    // update all the stores' "shopping lists" maps to use the new shopping list name
+    await stores
+        .getDocuments()
+        .then((querySnapshot) => {
+      querySnapshot.documents.forEach((doc) => {
+        if (doc.data['shoppingLists'][shoppingListID] != null) {
+          doc.reference.updateData({'shoppingLists.$shoppingListID': newName})
+        }
+      })
+    });
   }
 
   Future addItemToShoppingList(String listID, String itemID) async {
@@ -73,9 +87,23 @@ class DatabaseManager {
       }).catchError((e) {
         print(e.toString());
       });
+      updateLinkedShoppingLists(store.id, store.name + " (" + store.address + ")");
     } else {
       print("ID is null/has no length");
     }
+  }
+
+  Future updateLinkedShoppingLists(storeID, newName) async {
+    // update all the shopping lists's "stores" maps to use the new store name
+    await shoppingLists
+        .getDocuments()
+        .then((querySnapshot) => {
+          querySnapshot.documents.forEach((doc) => {
+            if (doc.data['stores'][storeID] != null) { // can't use ['stores.$storeID']
+              doc.reference.updateData({'stores.$storeID': newName})
+            }
+          })
+        });
   }
 
   Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
@@ -118,6 +146,16 @@ class DatabaseManager {
     } else {
       print("ID is null/has no length");
     }
+  }
+
+  Future updateStoreShoppingListLink(String shoppingListID, String storeID, String shoppingListName, String storeName, bool val) async {
+    // add this store to the specified shopping list
+    DocumentReference shoppingListRef = shoppingLists.document(shoppingListID);
+    val == true ? shoppingListRef.updateData({'stores.$storeID': storeName}) : shoppingListRef.updateData({'stores.$storeID': FieldValue.delete()});
+
+    // and add this shopping list to the specified store
+    DocumentReference storeRef =  stores.document(storeID);
+    val == true ? storeRef.updateData({'shoppingLists.$shoppingListID': shoppingListName}) : storeRef.updateData({'shoppingLists.$shoppingListID': FieldValue.delete()});
   }
 
 }

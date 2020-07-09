@@ -80,7 +80,6 @@ class _EditItemFormState extends State<EditItemForm> {
 
   @override
   void initState() {
-    print(args.item.date.toString());
     itemFields.id = args.item.id;
     itemFields.name = args.item.name;
     itemFields.addedBy = args.item.addedBy;

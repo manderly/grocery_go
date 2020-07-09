@@ -29,7 +29,7 @@ class _ExistingStoreState extends State<ExistingStore> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: StoreForm(args: args),
+          child: StoreForm(store: args.store),
         ),
       ),
     );

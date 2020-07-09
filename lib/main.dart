@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/views/existing_list.dart';
+import 'package:grocery_go/views/manage_links.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './components/item_list_header.dart';
@@ -14,6 +15,7 @@ import './views/new_item.dart';
 import './views/new_shopping_list.dart';
 import './views/new_store.dart';
 import './views/edit_item.dart';
+import './views/manage_links.dart';
 
 import './db/database_manager.dart';
 
@@ -51,6 +53,7 @@ class _GroceryGoAppState extends State<GroceryGoApp> {
       NewStore.routeName: (context) => NewStore(),
       NewItem.routeName: (context) => NewItem(),
       ExistingItem.routeName: (context) => ExistingItem(),
+      ManageLinks.routeName: (context) => ManageLinks(),
     };
 
     return MaterialApp(

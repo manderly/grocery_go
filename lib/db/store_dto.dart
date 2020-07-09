@@ -4,9 +4,10 @@ class StoreDTO {
   String name;
   String date;
   String address;
+  Map shoppingLists;
 
   String toString() {
-    return 'id: $id, name: $name, date: $date, address: $address';
+    return 'id: $id, name: $name, date: $date, address: $address, shoppingLists: $shoppingLists';
   }
 
   Map<String, dynamic> toJson() => <String, dynamic> {
@@ -14,5 +15,6 @@ class StoreDTO {
     'name': this.name,
     'date': this.date,
     'address': this.address,
+    'shoppingLists': this.shoppingLists,
   };
 }
