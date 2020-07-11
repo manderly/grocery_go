@@ -16,8 +16,8 @@ class DatabaseManager {
     return stores.orderBy("name").snapshots();
   }
 
-  Stream<QuerySnapshot> getItemsStream(shoppingListID, isCrossedOff) {
-    return shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: isCrossedOff).snapshots();
+  Stream<QuerySnapshot> getItemsStream(shoppingListID, isCrossedOff, storeID) {
+    return shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: isCrossedOff).orderBy('listPositions.$storeID').snapshots();
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {

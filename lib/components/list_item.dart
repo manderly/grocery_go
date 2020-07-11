@@ -56,7 +56,7 @@ class ListItem extends StatelessWidget {
       subtitle: Text(buildSubtitleString()),
       leading: FlutterLogo(),
       trailing: IconButton(
-        icon: Icon(Icons.info),
+        icon: Icon(Icons.more_horiz),
         onPressed: () => onInfoTap(item),
       ),
       onTap: () => onTap(item), //handleTap(context),

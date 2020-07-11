@@ -12,6 +12,7 @@ class Item {
   bool private;
   bool urgent;
   bool isCrossedOff;
+  Map listPositions;
 
   Item(DocumentSnapshot document) {
     this.id = document['id'];
@@ -25,5 +26,6 @@ class Item {
     this.private = document['private'];
     this.urgent = document['urgent'];
     this.isCrossedOff = document['isCrossedOff'];
+    this.listPositions = document['listPositions'];
   }
 }
