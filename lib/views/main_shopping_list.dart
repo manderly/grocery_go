@@ -15,6 +15,7 @@ class SelectedStore {
   SelectedStore(this.id, this.name);
 }
 
+// todo: refactor this out
 class MainShoppingListArguments {
   final ShoppingList list;
   MainShoppingListArguments(this.list);
@@ -24,13 +25,24 @@ class MainShoppingList extends StatefulWidget {
 
   static const routeName = '/mainShoppingList';
 
-  MainShoppingList({Key key});
+  final ShoppingList list;
+  MainShoppingList({Key key, this.list});
 
   @override
   _MainShoppingListState createState() => _MainShoppingListState();
 }
 
 class _MainShoppingListState extends State<MainShoppingList> {
+
+  var itemsStreamActive;
+  var itemsStreamCrossedOff;
+
+  @override
+  void initState() {
+    super.initState();
+    itemsStreamActive = db.getItemsStream(widget.list.id, false, selectedStore.id);
+    itemsStreamCrossedOff = db.getItemsStream(widget.list.id, true, selectedStore.id);
+  }
 
   final DatabaseManager db = DatabaseManager();
 
@@ -47,24 +59,23 @@ class _MainShoppingListState extends State<MainShoppingList> {
     }
 
     _updateCrossedOffStatus(Item item) async {
-      setState(() {
-        item.isCrossedOff = !item.isCrossedOff;
-      });
-
-      print("updating crossed off status:" + item.isCrossedOff.toString());
       await db.updateItemCrossedOffStatus(
-          args.list.id,
+          widget.list.id,
           item.id,
           {
             'isCrossedOff': !item.isCrossedOff,
             'lastUpdated': DateTime.now().toString()
           }
       );
+      setState(() {
+        itemsStreamActive = db.getItemsStream(widget.list.id, false, selectedStore.id);
+        itemsStreamCrossedOff = db.getItemsStream(widget.list.id, true, selectedStore.id);
+      });
     }
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(args.list.name),
+          title: Text(widget.list.name),
         ),
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints viewportConstraints) {
@@ -100,7 +111,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
                                   title: Text("Select a store"),
                                   message: Text("Customizing the item order for each store you visit helps streamline your shopping trips."),
                                   actions: [
-                                    ..._storeActions(args.list, _selectAction),
+                                    ..._storeActions(widget.list, _selectAction),
                                   ],
                                   cancelButton: CupertinoActionSheetAction(
                                     isDefaultAction: true,
@@ -115,18 +126,18 @@ class _MainShoppingListState extends State<MainShoppingList> {
                       ],
                       ),
                     ),
-                    ItemListHeader(text: args.list.id), // getCrossedOffStream
-                    ItemListStream(dbStream: db.getItemsStream(args.list.id, false, selectedStore.id),
+                    ItemListHeader(text: widget.list.id), // getCrossedOffStream
+                    ItemListStream(dbStream: itemsStreamActive,
                         listType: 'item',
                         onTap: _updateCrossedOffStatus,
                         onInfoTap: _editItem,
-                        parentList: args.list),
+                        parentList: widget.list),
                     ItemListHeader(text: "Crossed off"),
-                    ItemListStream(dbStream: db.getItemsStream(args.list.id, true, selectedStore.id),
+                    ItemListStream(dbStream: itemsStreamCrossedOff,
                         listType: 'crossedOff',
                         onTap: _updateCrossedOffStatus,
                         onInfoTap: _editItem,
-                        parentList: args.list),
+                        parentList: widget.list),
                   ],
                 ),
               );

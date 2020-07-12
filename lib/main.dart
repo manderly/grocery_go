@@ -47,7 +47,6 @@ class _GroceryGoAppState extends State<GroceryGoApp> {
 
     var routes = {
       ExistingList.routeName: (context) => ExistingList(),
-      MainShoppingList.routeName: (context) => MainShoppingList(),
       NewShoppingList.routeName: (context) => NewShoppingList(),
       ExistingStore.routeName: (context) => ExistingStore(),
       NewStore.routeName: (context) => NewStore(),
@@ -58,6 +57,23 @@ class _GroceryGoAppState extends State<GroceryGoApp> {
 
     return MaterialApp(
       routes: routes,
+      // alternative method of passing args into a route
+      onGenerateRoute: (settings) {
+        if (settings.name == MainShoppingList.routeName) {
+          final MainShoppingListArguments args = settings.arguments;
+
+          return MaterialPageRoute(
+            builder: (context) {
+              return MainShoppingList(
+                  list: args.list
+              );
+            },
+          );
+        }
+
+        assert(false, 'Need to implement ${settings.name}');
+        return null;
+      },
       theme: darkTheme ? ThemeData.dark() : ThemeData.light(),
       home: MainPage(darkTheme: darkTheme, toggleTheme: toggleTheme),
     );
@@ -81,7 +97,11 @@ class _MainPageState extends State<MainPage> {
   final DatabaseManager db = DatabaseManager();
 
   _goToList(ShoppingList list) {
-    Navigator.pushNamed(context, MainShoppingList.routeName, arguments: MainShoppingListArguments(list));
+    print("navigating to: " + list.name);
+    Navigator.pushNamed(
+        context,
+        MainShoppingList.routeName,
+        arguments: MainShoppingListArguments(list));
   }
 
   _editStore(Store store) {
