@@ -57,7 +57,7 @@ class ItemList extends StatelessWidget {
               print("Unhandled list item type");
             }
 
-            return ListItem(item: listItem, listType: listType, count: getCount(listItem), onTap: onItemTap, onInfoTap: onInfoTap);
+            return ListItem(item: listItem, listType: listType, count: getCount(listItem), onTap: onItemTap, onInfoTap: onInfoTap, parentListID: parentList?.id);
           }
         }
     );

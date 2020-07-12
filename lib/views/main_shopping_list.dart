@@ -47,13 +47,18 @@ class _MainShoppingListState extends State<MainShoppingList> {
     }
 
     _updateCrossedOffStatus(Item item) async {
+      setState(() {
+        item.isCrossedOff = !item.isCrossedOff;
+      });
+
+      print("updating crossed off status:" + item.isCrossedOff.toString());
       await db.updateItemCrossedOffStatus(
-        args.list.id,
-        item.id,
-        {
-          'isCrossedOff': !item.isCrossedOff,
-          'lastUpdated': DateTime.now().toString()
-        }
+          args.list.id,
+          item.id,
+          {
+            'isCrossedOff': !item.isCrossedOff,
+            'lastUpdated': DateTime.now().toString()
+          }
       );
     }
 
@@ -100,7 +105,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
                                   cancelButton: CupertinoActionSheetAction(
                                     isDefaultAction: true,
                                     child: Text('Default'),
-                                    onPressed: () { print("default"); },
+                                    onPressed: () => _selectAction("default", "Default"),
                                   ),
                                 );
                               },
@@ -111,9 +116,17 @@ class _MainShoppingListState extends State<MainShoppingList> {
                       ),
                     ),
                     ItemListHeader(text: args.list.id), // getCrossedOffStream
-                    ItemListStream(dbStream: db.getItemsStream(args.list.id, false, 'NjT2lc4ZczXh3AEcip7R'), listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: args.list),
+                    ItemListStream(dbStream: db.getItemsStream(args.list.id, false, selectedStore.id),
+                        listType: 'item',
+                        onTap: _updateCrossedOffStatus,
+                        onInfoTap: _editItem,
+                        parentList: args.list),
                     ItemListHeader(text: "Crossed off"),
-                    ItemListStream(dbStream: db.getItemsStream(args.list.id, true, 'NjT2lc4ZczXh3AEcip7R'), listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: args.list),
+                    ItemListStream(dbStream: db.getItemsStream(args.list.id, true, selectedStore.id),
+                        listType: 'crossedOff',
+                        onTap: _updateCrossedOffStatus,
+                        onInfoTap: _editItem,
+                        parentList: args.list),
                   ],
                 ),
               );
