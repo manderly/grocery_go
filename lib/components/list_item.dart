@@ -5,13 +5,14 @@ import 'package:timeago/timeago.dart' as timeago;
 class ListItem extends StatelessWidget {
 
   final item;
+  final index;
   final parentListID;
   final listType;
   final count;
   final onTap;
   final onInfoTap;
 
-  ListItem({Key key, this.item: "Unknown", this.listType, this.count, this.onTap, this.onInfoTap, this.parentListID});
+  ListItem({Key key, this.item: "Unknown", this.index, this.listType, this.count, this.onTap, this.onInfoTap, this.parentListID});
 
   buildDateString(date) {
     if (date != null && date.length > 0) {
@@ -60,7 +61,7 @@ class ListItem extends StatelessWidget {
         icon: Icon(Icons.more_horiz),
         onPressed: () => onInfoTap(item),
       ),
-      onTap: () => onTap(item),
+      onTap: () => onTap(item, index),
     );
   }
 }

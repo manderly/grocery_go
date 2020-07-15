@@ -20,7 +20,14 @@ class DatabaseManager {
     return shoppingLists.document(shoppingListID).collection('items').orderBy('listPositions.$storeID').snapshots();
   }
 
-  Future getItems(shoppingListID, isCrossedOff, storeID) async {
+  Future getItems(shoppingListID, isCrossedOff) async {
+    // help with structuring this request:
+    // https://github.com/flutter/flutter/issues/34770
+    var qn = await shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: isCrossedOff).getDocuments();
+    return qn.documents;
+  }
+
+  Future<List<DocumentSnapshot>> getListItems(shoppingListID, isCrossedOff) async {
     var qn = await shoppingLists.document(shoppingListID).collection('items').where('isCrossedOff', isEqualTo: isCrossedOff).getDocuments();
     return qn.documents;
   }

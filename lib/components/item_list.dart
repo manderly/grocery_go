@@ -31,7 +31,7 @@ class _ItemListState extends State<ItemList> {
       if (widget.listType == 'shopping list') {
         return item.itemCount;
       } else {
-        return widget.list.length;
+        return widget?.list?.length;
       }
     }
 
@@ -39,9 +39,9 @@ class _ItemListState extends State<ItemList> {
         key: widget.key,
         shrinkWrap: true, // gives it a size
         primary: false, // so the shopping and store lists don't scroll independently
-        itemCount: widget.list.length + 1,
+        itemCount: widget?.list?.length ?? 0 + 1,
         itemBuilder: (BuildContext context, int index) {
-          if (index == widget.list.length) {
+          if (index == widget?.list?.length) {
             if (widget.listType == 'crossedOff') {
               return DeleteAll();
             } else if (widget.listType == 'store' || widget.listType == 'shopping list') {
@@ -60,12 +60,12 @@ class _ItemListState extends State<ItemList> {
             } else if (widget.listType == 'store') {
               listItem = Store(widget.list[index]);
             } else if (widget.listType == 'item' || widget.listType == 'crossedOff') {
-              listItem = Item(widget.list[index]);
+              listItem = widget.list[index];
             } else {
               print("Unhandled list item type:" + widget.listType.toString());
             }
 
-            return ListItem(item: listItem, listType: widget.listType, count: getCount(listItem), onTap: widget.onItemTap, onInfoTap: widget.onInfoTap, parentListID: widget.parentList?.id);
+            return ListItem(item: listItem, index: index, listType: widget.listType, count: getCount(listItem), onTap: widget.onItemTap, onInfoTap: widget.onInfoTap, parentListID: widget.parentList?.id);
           }
         }
     );

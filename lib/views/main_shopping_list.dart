@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:grocery_go/components/item_list.dart';
 import 'package:grocery_go/components/item_list_future.dart';
 import 'package:grocery_go/components/item_list_header.dart';
-import 'package:grocery_go/components/item_list_stream.dart';
+import 'package:grocery_go/components/item_list_sort.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/models/item.dart';
 import 'package:grocery_go/models/shopping_list.dart';
@@ -38,20 +38,31 @@ class _MainShoppingListState extends State<MainShoppingList> {
 
   final DatabaseManager db = DatabaseManager();
 
-  var itemsStream;
-  var itemsActive;
-  var itemsCrossedOff;
-
   // todo: save user's last-selected list (locally)
   var selectedStore = SelectedStore("default", "Default");
+  var activeItems = List<Item>();
+  var inactiveItems = List<Item>();
 
   @override
   void initState() {
     super.initState();
-    itemsStream = db.getItemsStream(widget.list.id, selectedStore.id);
+    // get active items (crossedOff = false)
+    getItems(false).then((documents) {
+      setState(() {
+        documents.forEach((doc) => activeItems.add(Item(doc)));
+      });
+    });
+    // get inactive items (crossedOff = true)
+    getItems(true).then((documents) {
+      setState(() {
+        documents.forEach((doc) => inactiveItems.add(Item(doc)));
+      });
+    });
+  }
 
-    itemsActive = db.getItems(widget.list.id, true, selectedStore.id);
-    itemsCrossedOff = db.getItems(widget.list.id, false, selectedStore.id);
+  Future getItems(crossedOff) async {
+    var result = await db.getListItems(widget.list.id, crossedOff);
+    return result;
   }
 
   _editItem(Item item) {
@@ -65,32 +76,8 @@ class _MainShoppingListState extends State<MainShoppingList> {
     Navigator.pop(context, id);
   }
 
-  _updateCrossedOffStatus(Item item) async {
-
-    await db.updateItemCrossedOffStatus(
-        widget.list.id,
-        item.id,
-        {
-          'isCrossedOff': !item.isCrossedOff,
-          'lastUpdated': DateTime.now().toString()
-        }
-    );
-
-    await new Future.delayed(const Duration(milliseconds : 1000));
-
-    setState(() {
-      itemsStream = db.getItemsStream(widget.list.id, selectedStore.id);
-
-      itemsActive = db.getItems(widget.list.id, true, selectedStore.id);
-      itemsCrossedOff = db.getItems(widget.list.id, false, selectedStore.id);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-
-
-    //final MainShoppingListArguments args = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
         appBar: AppBar(
@@ -136,36 +123,13 @@ class _MainShoppingListState extends State<MainShoppingList> {
                       ],
                       ),
                     ),
-                    ItemListHeader(text: widget.list.id),
-                    ItemListFuture(
-                      selectedStore: selectedStore,
+                    ItemListSort(
+                      activeItems: activeItems,
+                      inactiveItems: inactiveItems,
                       listType: 'item',
-                      onItemTap: _updateCrossedOffStatus,
                       onInfoTap: _editItem,
                       parentList: widget.list
                     ),
-                    /*
-                    ItemListStream(
-                        dbStream: itemsActive,
-                        listType: 'item',
-                        onTap: _updateCrossedOffStatus,
-                        onInfoTap: _editItem,
-                        parentList: widget.list), */
-                    ItemListHeader(text: "Crossed off"),
-                    ItemListFuture(
-                      selectedStore: selectedStore,
-                      listType: 'crossedOff',
-                      onItemTap: _updateCrossedOffStatus,
-                      onInfoTap: _editItem,
-                      parentList: widget.list
-                    ),
-                    /*
-                    ItemListStream(
-                        dbStream: itemsCrossedOff,
-                        listType: 'crossedOff',
-                        onTap: _updateCrossedOffStatus,
-                        onInfoTap: _editItem,
-                        parentList: widget.list), */
                   ],
                 ),
               );
