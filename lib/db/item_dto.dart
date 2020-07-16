@@ -11,11 +11,12 @@ class ItemDTO {
   bool private;
   bool urgent;
   bool isCrossedOff;
+  Map listPositions;
 
   String toString() {
     return 'id: $id, name: $name, date: $date, '
         'quantity: $quantity, subsOk: $subsOk, substitutions: $substitutions, '
-        'addedBy: $addedBy, lastUpdated: $lastUpdated, private: $private, urgent: $urgent, isCrossedOff: $isCrossedOff';
+        'addedBy: $addedBy, lastUpdated: $lastUpdated, private: $private, urgent: $urgent, isCrossedOff: $isCrossedOff, listPositions: $listPositions';
   }
 
   Map<String, dynamic> toJson() => <String, dynamic> {
@@ -30,5 +31,6 @@ class ItemDTO {
     'private': this.private,
     'urgent':this.urgent,
     'isCrossedOff':this.isCrossedOff,
+    'listPositions':this.listPositions,
   };
 }

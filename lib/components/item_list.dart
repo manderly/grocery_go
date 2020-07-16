@@ -29,7 +29,7 @@ class _ItemListState extends State<ItemList> {
 
     int getCount(item) {
       if (widget.listType == 'shopping list') {
-        return item.itemCount;
+        return item.activeItems;
       } else {
         return widget?.list?.length;
       }
@@ -60,7 +60,7 @@ class _ItemListState extends State<ItemList> {
             } else if (widget.listType == 'store') {
               listItem = Store(widget.list[index]);
             } else if (widget.listType == 'item' || widget.listType == 'crossedOff') {
-              listItem = widget.list[index];
+              listItem = Item(widget.list[index]);
             } else {
               print("Unhandled list item type:" + widget.listType.toString());
             }

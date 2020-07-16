@@ -16,8 +16,16 @@ class DatabaseManager {
     return stores.orderBy("name").snapshots();
   }
 
+  /*
   Stream<QuerySnapshot> getItemsStream(shoppingListID, storeID) {
     return shoppingLists.document(shoppingListID).collection('items').orderBy('listPositions.$storeID').snapshots();
+  } */
+
+  Stream<QuerySnapshot> getItemsStream(shoppingListID, storeID, isCrossedOff) {
+    return shoppingLists.document(shoppingListID).collection('items')
+        .where('isCrossedOff', isEqualTo: isCrossedOff)
+        .orderBy('listPositions.$storeID')
+        .snapshots();
   }
 
   Future getItems(shoppingListID, isCrossedOff) async {
@@ -119,7 +127,7 @@ class DatabaseManager {
   }
 
   Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
-    shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(1)});
+    shoppingLists.document(parentListID).updateData({'totalItems': FieldValue.increment(1)});
     DocumentReference itemDocRef = await shoppingLists.document(parentListID).collection('items').add(item.toJson());
     print(itemDocRef.documentID);
     itemDocRef.updateData({'id':itemDocRef.documentID});
@@ -144,9 +152,9 @@ class DatabaseManager {
     if (parentListID != null && parentListID.length > 0) {
       // adjust the shopping list's item count accordingly
       if (data['isCrossedOff']) {
-        shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(-1)});
+        shoppingLists.document(parentListID).updateData({'activeItems': FieldValue.increment(-1)});
       } else {
-        shoppingLists.document(parentListID).updateData({'itemCount': FieldValue.increment(1)});
+        shoppingLists.document(parentListID).updateData({'activeItems': FieldValue.increment(1)});
       }
       // update the item itself
       DocumentReference itemDocRef = shoppingLists.document(parentListID).collection('items').document(itemID);

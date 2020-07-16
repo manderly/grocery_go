@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list_future.dart';
 import 'package:grocery_go/components/item_list_header.dart';
 import 'package:grocery_go/components/item_list_sort.dart';
+import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/models/item.dart';
 import 'package:grocery_go/models/shopping_list.dart';
@@ -43,24 +44,18 @@ class _MainShoppingListState extends State<MainShoppingList> {
   var activeItems = List<Item>();
   var inactiveItems = List<Item>();
 
+  var activeItemsStream;
+  var inactiveItemsStream;
+
   @override
   void initState() {
     super.initState();
-    // get active items (crossedOff = false)
-    getItems(false).then((documents) {
-      setState(() {
-        documents.forEach((doc) => activeItems.add(Item(doc)));
-      });
-    });
-    // get inactive items (crossedOff = true)
-    getItems(true).then((documents) {
-      setState(() {
-        documents.forEach((doc) => inactiveItems.add(Item(doc)));
-      });
-    });
+    activeItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, false);
+    inactiveItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, true);
   }
 
   Future getItems(crossedOff) async {
+
     var result = await db.getListItems(widget.list.id, crossedOff);
     return result;
   }
@@ -74,6 +69,27 @@ class _MainShoppingListState extends State<MainShoppingList> {
       selectedStore = SelectedStore(id, name);
     });
     Navigator.pop(context, id);
+  }
+
+  _updateCrossedOffStatus(Item item, int index) async {
+
+    print(item.name + " at index: " + index.toString() + " isCrossedOff: " + item.isCrossedOff.toString());
+
+    // change it in the database
+    await db.updateItemCrossedOffStatus(
+        widget.list.id,
+        item.id,
+        {
+          'isCrossedOff': !item.isCrossedOff,
+          'lastUpdated': DateTime.now().toString()
+        }
+    );
+
+    // update state
+    setState(() {
+      activeItemsStream = activeItemsStream;
+      inactiveItemsStream = inactiveItemsStream;
+    });
   }
 
   @override
@@ -123,13 +139,18 @@ class _MainShoppingListState extends State<MainShoppingList> {
                       ],
                       ),
                     ),
+                    ItemListHeader(text: "Items"),
+                    ItemListStream(dbStream: activeItemsStream, listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
+                    ItemListHeader(text: "Crossed Off"),
+                    ItemListStream(dbStream: inactiveItemsStream, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
+                    /*
                     ItemListSort(
                       activeItems: activeItems,
                       inactiveItems: inactiveItems,
                       listType: 'item',
                       onInfoTap: _editItem,
                       parentList: widget.list
-                    ),
+                    ), */
                   ],
                 ),
               );

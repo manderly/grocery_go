@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/forms/new_item_form.dart';
+import 'package:grocery_go/models/shopping_list.dart';
 
 class NewItemArguments {
-  final String parentListID;
-  final String parentListName;
-  NewItemArguments(this.parentListID, this.parentListName);
+  final ShoppingList parentList;
+  NewItemArguments(this.parentList);
 }
 
 class NewItem extends StatefulWidget {
@@ -32,7 +32,7 @@ class _NewItemState extends State<NewItem> {
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(20),
-            child: NewItemForm(args: args),
+            child: NewItemForm(parentList: args.parentList),
           ),
         ),
       ),

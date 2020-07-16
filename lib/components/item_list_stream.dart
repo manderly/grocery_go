@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_go/components/add_new.dart';
 import 'package:grocery_go/components/item_list.dart';
+import 'package:grocery_go/models/shopping_list.dart';
 
 class ItemListStream extends StatelessWidget {
 
@@ -8,7 +9,7 @@ class ItemListStream extends StatelessWidget {
   final listType; // item, crossedOff
   final onTap;
   final onInfoTap;
-  final parentList;
+  final ShoppingList parentList;
 
   ItemListStream({@required this.dbStream, @required this.listType, @required this.onTap, @required this.onInfoTap, this.parentList});
 
