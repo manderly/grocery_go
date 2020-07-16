@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list.dart';
 import 'package:grocery_go/components/item_list_header.dart';
@@ -69,7 +68,7 @@ class _ItemListSortState extends State<ItemListSort> {
       return Item(itemAtIndex);
     } else {
       print("Unhandled list item type:" + widget.listType.toString());
-      return Text("ERROR item_list_future.dart");
+      return Text("ERROR item_list_future");
     }
   }
 

@@ -81,7 +81,7 @@ class _ItemListFutureState extends State<ItemListFuture> {
       return Item(itemAtIndex);
     } else {
       print("Unhandled list item type:" + widget.listType.toString());
-      return Text("ERROR item_list_future.dart");
+      return Text("ERROR item_list_future");
     }
   }
 

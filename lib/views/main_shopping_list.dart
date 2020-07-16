@@ -1,9 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:grocery_go/components/item_list_future.dart';
 import 'package:grocery_go/components/item_list_header.dart';
-import 'package:grocery_go/components/item_list_sort.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/models/item.dart';
@@ -64,9 +61,11 @@ class _MainShoppingListState extends State<MainShoppingList> {
     Navigator.pushNamed(context, ExistingItem.routeName, arguments: EditItemArguments(item, widget.list.id, widget.list.name));
   }
 
-  _selectAction(String id, String name) {
+  _selectStoreAction(String id, String name) {
     setState(() {
       selectedStore = SelectedStore(id, name);
+      activeItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, false);
+      inactiveItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, true);
     });
     Navigator.pop(context, id);
   }
@@ -124,12 +123,12 @@ class _MainShoppingListState extends State<MainShoppingList> {
                                   title: Text("Select a store"),
                                   message: Text("Customizing the item order for each store you visit helps streamline your shopping trips."),
                                   actions: [
-                                    ..._storeActions(widget.list, _selectAction),
+                                    ..._storeActions(widget.list, _selectStoreAction),
                                   ],
                                   cancelButton: CupertinoActionSheetAction(
                                     isDefaultAction: true,
                                     child: Text('Default'),
-                                    onPressed: () => _selectAction("default", "Default"),
+                                    onPressed: () => _selectStoreAction("default", "Default"),
                                   ),
                                 );
                               },
@@ -143,14 +142,6 @@ class _MainShoppingListState extends State<MainShoppingList> {
                     ItemListStream(dbStream: activeItemsStream, listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
                     ItemListHeader(text: "Crossed Off"),
                     ItemListStream(dbStream: inactiveItemsStream, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
-                    /*
-                    ItemListSort(
-                      activeItems: activeItems,
-                      inactiveItems: inactiveItems,
-                      listType: 'item',
-                      onInfoTap: _editItem,
-                      parentList: widget.list
-                    ), */
                   ],
                 ),
               );
