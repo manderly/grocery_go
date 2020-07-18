@@ -90,6 +90,7 @@ class _EditItemFormState extends State<EditItemForm> {
     itemFields.private = args.item.private;
     itemFields.urgent = args.item.urgent;
     itemFields.isCrossedOff = args.item.isCrossedOff;
+    itemFields.listPositions = args.item.listPositions;
     return super.initState();
   }
 
