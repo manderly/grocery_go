@@ -34,8 +34,8 @@ class _NewItemFormState extends State<NewItemForm> {
     if (formState.validate()) {
       formKey.currentState.save();
 
-      itemFields.date = DateTime.now() as Timestamp;
-      itemFields.lastUpdated = DateTime.now() as Timestamp;
+      itemFields.date = Timestamp.fromDate(DateTime.now());
+      itemFields.lastUpdated = Timestamp.fromDate(DateTime.now());
       itemFields.addedBy = "TILCode";
       itemFields.subsOk = true;
       itemFields.substitutions = new List<String>();

@@ -75,7 +75,6 @@ class DatabaseManager {
   }
 
   Future addItemToShoppingList(String listID, String itemID) async {
-    print("adding item[$itemID] to list[$listID]");
     if (listID != null && listID.length > 0) {
       DocumentReference docRef = shoppingLists.document(listID);
       Firestore.instance.runTransaction((Transaction tx) async {
@@ -130,7 +129,6 @@ class DatabaseManager {
   Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
     shoppingLists.document(parentListID).updateData({'totalItems': FieldValue.increment(1)});
     DocumentReference itemDocRef = await shoppingLists.document(parentListID).collection('items').add(item.toJson());
-    print(itemDocRef.documentID);
     itemDocRef.updateData({'id':itemDocRef.documentID});
     return itemDocRef;
   }
@@ -176,6 +174,26 @@ class DatabaseManager {
     // and add this shopping list to the specified store
     DocumentReference storeRef =  stores.document(storeID);
     val == true ? storeRef.updateData({'shoppingLists.$shoppingListID': shoppingListName}) : storeRef.updateData({'shoppingLists.$shoppingListID': FieldValue.delete()});
+
+    // add this store to each of the shopping list's items and give it a default position
+    // todo: if the user toggles an existing store on/off, the position data will be reset to match default which may not be desired
+    addNewStorePositionKeyToItems(shoppingListID, storeID);
+  }
+
+
+  Future addNewStorePositionKeyToItems(String shoppingListID, String storeID) async {
+    // get the shopping list that's getting a new store added to it
+    var itemsRef = shoppingLists.document(shoppingListID).collection('items');
+    //for each item, add listPosition['storeID'] and set value equal to listPosition['default']
+    await itemsRef.getDocuments()
+        .then((querySnapshot) => {
+          querySnapshot.documents.forEach((doc) => {
+            if (doc.data['listPositions'][storeID] == null) { // can't use ['stores.$storeID']
+              // make the value for this new store match this item's current value for default
+              doc.reference.updateData({'listPositions.$storeID': doc.data['listPositions']['default']})
+            }
+      })
+    });
   }
 
 }
