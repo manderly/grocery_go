@@ -145,7 +145,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
                     AddNew(listType: 'item', parentList: widget.list),
                     ItemListHeader(text: "Crossed Off"),
                     ItemListStream(dbStream: inactiveItemsStream, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
-                    DeleteAll(), // todo: don't show if the crossedOff list length is zero 
+                    DeleteAll(), // todo: don't show if the crossedOff list length is zero
                   ],
                 ),
               );

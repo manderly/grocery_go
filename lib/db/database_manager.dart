@@ -16,11 +16,6 @@ class DatabaseManager {
     return stores.orderBy("name").snapshots();
   }
 
-  /*
-  Stream<QuerySnapshot> getItemsStream(shoppingListID, storeID) {
-    return shoppingLists.document(shoppingListID).collection('items').orderBy('listPositions.$storeID').snapshots();
-  } */
-
   Stream<QuerySnapshot> getItemsStream(shoppingListID, storeID, isCrossedOff) {
     return shoppingLists.document(shoppingListID).collection('items')
         .where('isCrossedOff', isEqualTo: isCrossedOff)
@@ -135,7 +130,6 @@ class DatabaseManager {
   }
 
   Future updateItem(String parentListID, ItemDTO item) async {
-    print("item:" + item.toString());
     if (parentListID != null && parentListID.length > 0) {
       DocumentReference itemDocRef = shoppingLists.document(parentListID).collection('items').document(item.id);
       Firestore.instance.runTransaction((Transaction tx) async {
