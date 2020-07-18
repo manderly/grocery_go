@@ -49,8 +49,8 @@ class _MainShoppingListState extends State<MainShoppingList> {
   @override
   void initState() {
     super.initState();
-    activeItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, false);
-    inactiveItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, true);
+    activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStore.id);
+    inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
   }
 
   Future getItems(crossedOff) async {
@@ -66,8 +66,8 @@ class _MainShoppingListState extends State<MainShoppingList> {
   _selectStoreAction(String id, String name) {
     setState(() {
       selectedStore = SelectedStore(id, name);
-      activeItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, false);
-      inactiveItemsStream = db.getItemsStream(widget.list.id, selectedStore.id, true);
+      activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStore.id);
+      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
     });
     Navigator.pop(context, id);
   }
@@ -82,7 +82,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
         item.id,
         {
           'isCrossedOff': !item.isCrossedOff,
-          'lastUpdated': DateTime.now().toString()
+          'lastUpdated': DateTime.now()
         }
     );
 

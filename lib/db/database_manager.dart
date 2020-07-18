@@ -16,10 +16,16 @@ class DatabaseManager {
     return stores.orderBy("name").snapshots();
   }
 
-  Stream<QuerySnapshot> getItemsStream(shoppingListID, storeID, isCrossedOff) {
+  Stream<QuerySnapshot> getActiveItemsStream(shoppingListID, storeID) {
     return shoppingLists.document(shoppingListID).collection('items')
-        .where('isCrossedOff', isEqualTo: isCrossedOff)
+        .where('isCrossedOff', isEqualTo: false)
         .orderBy('listPositions.$storeID')
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getInactiveItemsStream(shoppingListID) {
+    return shoppingLists.document(shoppingListID).collection('items')
+        .where('isCrossedOff', isEqualTo: true)
         .snapshots();
   }
 

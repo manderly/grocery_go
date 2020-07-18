@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/item_dto.dart';
@@ -33,8 +34,8 @@ class _NewItemFormState extends State<NewItemForm> {
     if (formState.validate()) {
       formKey.currentState.save();
 
-      itemFields.date = DateTime.now().toString();
-      itemFields.lastUpdated = DateTime.now().toString();
+      itemFields.date = DateTime.now() as Timestamp;
+      itemFields.lastUpdated = DateTime.now() as Timestamp;
       itemFields.addedBy = "TILCode";
       itemFields.subsOk = true;
       itemFields.substitutions = new List<String>();

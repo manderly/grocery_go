@@ -15,15 +15,15 @@ class ListItem extends StatelessWidget {
   ListItem({Key key, this.item: "Unknown", this.index, this.listType, this.count, this.onTap, this.onInfoTap, this.parentListID});
 
   buildDateString(date) {
-    if (date != null && date.length > 0) {
-      return DateFormat.yMMMd().format(DateTime.parse(date));
+    if (date != null) {
+      return DateFormat.yMMMd().format(date.toDate());
     } else {
       return 'unknown date';
     }
   }
 
   buildCrossedOffDate(date) {
-    var difference = new DateTime.now().difference(DateTime.parse(date));
+    var difference = new DateTime.now().difference(date.toDate());
     var howLongAgo = DateTime.now().subtract(difference);
 
     return (timeago.format(howLongAgo).toString());

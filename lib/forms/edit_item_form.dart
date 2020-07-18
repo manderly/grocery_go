@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/item_dto.dart';
@@ -34,7 +35,7 @@ class _EditItemFormState extends State<EditItemForm> {
 
     if (formState.validate()) {
       formKey.currentState.save();
-      itemFields.lastUpdated = DateTime.now().toString();
+      itemFields.lastUpdated = Timestamp.fromDate(DateTime.now());
 
       var docRef = await db.updateItem(args.parentListID, itemFields);
 
