@@ -98,7 +98,7 @@ class _MainPageState extends State<MainPage> {
   final DatabaseManager db = DatabaseManager();
 
   _goToList(ShoppingList list, int index) {
-    print("navigating to: " + list.name);
+    print("navigating to: " + list.name + " list.id:" + list.id);
     Navigator.pushNamed(
         context,
         MainShoppingList.routeName,

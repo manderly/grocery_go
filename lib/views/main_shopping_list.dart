@@ -7,6 +7,7 @@ import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/models/item.dart';
 import 'package:grocery_go/models/shopping_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'edit_item.dart';
 
@@ -17,7 +18,6 @@ class SelectedStore {
   SelectedStore(this.id, this.name);
 }
 
-// todo: refactor this out
 class MainShoppingListArguments {
   final ShoppingList list;
   MainShoppingListArguments(this.list);
@@ -38,23 +38,51 @@ class _MainShoppingListState extends State<MainShoppingList> {
 
   final DatabaseManager db = DatabaseManager();
 
-  // todo: save user's last-selected list (locally)
-  var selectedStore = SelectedStore("default", "Default");
   var activeItems = List<Item>();
   var inactiveItems = List<Item>();
 
   var activeItemsStream;
   var inactiveItemsStream;
 
+  String selectedStoreID = 'default';
+  String selectedStoreName = '';
+
+  Future<Null> getSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    selectedStoreID = prefs.getString(widget.list.id) ?? 'default';
+    setState(() {
+      selectedStoreName = _getStoreName(selectedStoreID);
+    });
+  }
+
+  _setSelectedStore(String id, String name) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(widget.list.id, id);
+
+    setState(() {
+      selectedStoreID = id;
+      selectedStoreName = _getStoreName(selectedStoreID);
+      activeItemsStream = db.getActiveItemsStream(widget.list.id, id);
+      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
+    });
+
+    Navigator.pop(context, id);
+  }
+
+  _getStoreName(String id) {
+    return widget.list.stores[id] ?? 'Default';
+  }
+
   @override
   void initState() {
     super.initState();
-    activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStore.id);
+    selectedStoreID = '';
+    getSharedPrefs();
+    activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStoreID);
     inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
   }
 
   Future getItems(crossedOff) async {
-
     var result = await db.getListItems(widget.list.id, crossedOff);
     return result;
   }
@@ -63,20 +91,8 @@ class _MainShoppingListState extends State<MainShoppingList> {
     Navigator.pushNamed(context, ExistingItem.routeName, arguments: EditItemArguments(item, widget.list.id, widget.list.name));
   }
 
-  _selectStoreAction(String id, String name) {
-    setState(() {
-      selectedStore = SelectedStore(id, name);
-      activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStore.id);
-      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
-    });
-    Navigator.pop(context, id);
-  }
-
   _updateCrossedOffStatus(Item item, int index) async {
-
     print(item.name + " at index: " + index.toString() + " isCrossedOff: " + item.isCrossedOff.toString());
-
-    // change it in the database
     await db.updateItemCrossedOffStatus(
         widget.list.id,
         item.id,
@@ -86,7 +102,6 @@ class _MainShoppingListState extends State<MainShoppingList> {
         }
     );
 
-    // update state
     setState(() {
       activeItemsStream = activeItemsStream;
       inactiveItemsStream = inactiveItemsStream;
@@ -116,7 +131,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
                       children: [
                         Icon(Icons.more_horiz),
                         FlatButton(
-                          child: Text(selectedStore.name),
+                          child: Text(selectedStoreName),
                           onPressed: () {
                             showCupertinoModalPopup(
                               context: context,
@@ -125,12 +140,12 @@ class _MainShoppingListState extends State<MainShoppingList> {
                                   title: Text("Select a store"),
                                   message: Text("Customizing the item order for each store you visit helps streamline your shopping trips."),
                                   actions: [
-                                    ..._storeActions(widget.list, _selectStoreAction),
+                                    ..._storeOptions(widget.list, _setSelectedStore),
                                   ],
                                   cancelButton: CupertinoActionSheetAction(
                                     isDefaultAction: true,
                                     child: Text('Default'),
-                                    onPressed: () => _selectStoreAction("default", "Default"),
+                                    onPressed: () => _setSelectedStore('default', 'Default'),
                                   ),
                                 );
                               },
@@ -153,7 +168,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
     );
   }
 
-  _storeActions(list, selectAction) {
+  _storeOptions(list, selectAction) {
     var stores = List();
 
     list.stores.forEach((id, name) => {
