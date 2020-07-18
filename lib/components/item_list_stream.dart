@@ -30,7 +30,6 @@ class ItemListStream extends StatelessWidget {
                   padding: EdgeInsets.all(8),
                   child: Text("No items yet!"),
                 ),
-                AddNew(listType: listType, parentList: parentList),
               ],
           );
         }

@@ -18,6 +18,7 @@ import './views/edit_item.dart';
 import './views/manage_links.dart';
 
 import './db/database_manager.dart';
+import 'components/add_new.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -164,8 +165,10 @@ class _MainPageState extends State<MainPage> {
               children: <Widget>[
                 ItemListHeader(text: headerShoppingLists),
                 ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
+                AddNew(listType: 'shopping list'),
                 ItemListHeader(text: headerStores),
                 ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
+                AddNew(listType: 'store'),
               ],
             ),
           );

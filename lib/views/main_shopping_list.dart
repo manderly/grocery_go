@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grocery_go/components/add_new.dart';
+import 'package:grocery_go/components/delete_all.dart';
 import 'package:grocery_go/components/item_list_header.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/db/database_manager.dart';
@@ -140,8 +142,10 @@ class _MainShoppingListState extends State<MainShoppingList> {
                     ),
                     ItemListHeader(text: "Items"),
                     ItemListStream(dbStream: activeItemsStream, listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
+                    AddNew(listType: 'item', parentList: widget.list),
                     ItemListHeader(text: "Crossed Off"),
                     ItemListStream(dbStream: inactiveItemsStream, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
+                    DeleteAll(), // todo: don't show if the crossedOff list length is zero 
                   ],
                 ),
               );
