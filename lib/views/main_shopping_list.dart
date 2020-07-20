@@ -47,10 +47,10 @@ class _MainShoppingListState extends State<MainShoppingList> {
   String selectedStoreID = 'default';
   String selectedStoreName = '';
 
-  Future<Null> getSharedPrefs() async {
+  Future<String> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    selectedStoreID = prefs.getString(widget.list.id) ?? 'default';
     setState(() {
+      selectedStoreID = prefs.getString(widget.list.id) ?? 'default';
       selectedStoreName = _getStoreName(selectedStoreID);
     });
   }
@@ -76,8 +76,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
   @override
   void initState() {
     super.initState();
-    selectedStoreID = '';
-    getSharedPrefs();
+    getSharedPrefs(); // sets selectedStoreID
     activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStoreID);
     inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
   }
