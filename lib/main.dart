@@ -57,6 +57,7 @@ class _GroceryGoAppState extends State<GroceryGoApp> {
     };
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: routes,
       // alternative method of passing args into a route
       onGenerateRoute: (settings) {
@@ -113,6 +114,42 @@ class _MainPageState extends State<MainPage> {
     Navigator.pushNamed(context, ExistingList.routeName, arguments: ExistingListArguments(list));
   }
 
+  _settingsDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'Grocery Go',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+              ),
+            ),
+          ),
+          SwitchListTile(
+            title: Text('Dark Mode'),
+            value: widget.darkTheme,
+            onChanged: widget.toggleTheme,
+          ),
+          ListTile(
+            leading: Icon(Icons.account_circle),
+            title: Text('Account management'),
+            subtitle: Text('Logged in as TILCode')
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('App preferences'),
+          ),
+        ],
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -123,39 +160,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text('Grocery Go'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Grocery Go',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-              ),
-            ),
-            SwitchListTile(
-              title: Text('Dark Mode'),
-              value: widget.darkTheme,
-              onChanged: widget.toggleTheme,
-            ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Account management'),
-              subtitle: Text('Logged in as TILCode')
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('App preferences'),
-            ),
-          ],
-        ),
-      ),
+      drawer:_settingsDrawer(),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
           return SingleChildScrollView(
