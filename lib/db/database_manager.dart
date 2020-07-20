@@ -7,6 +7,7 @@ class DatabaseManager {
 
   final CollectionReference shoppingLists = Firestore.instance.collection('shopping_lists');
   final CollectionReference stores = Firestore.instance.collection('stores');
+  final CollectionReference users = Firestore.instance.collection('user_data');
 
   Stream<QuerySnapshot> getShoppingListStream() {
     return shoppingLists.orderBy("name").snapshots();
@@ -42,8 +43,18 @@ class DatabaseManager {
   }
 
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {
+    // create the new shopping list
     DocumentReference docRef = await shoppingLists.add(shoppingList.toJson());
-    shoppingLists.document(docRef.documentID).updateData({'id':docRef.documentID});
+    DocumentReference userRef = users.document('Nr2JtF4tqSTrD14gp5Sr');
+    DocumentSnapshot userSnapshot = await userRef.get();
+
+    // give the new shopping list a "pos" based on how many shopping lists the user has
+    shoppingLists.document(docRef.documentID).updateData({'id':docRef.documentID, 'pos': userSnapshot['shopping_list_count']+1});
+
+    // increase the total number of shopping lists the user has
+    users.document(userRef.documentID).updateData({'shopping_list_count': FieldValue.increment(1)});
+
+    // return the doc ref
     return docRef;
   }
 

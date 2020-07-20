@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/views/existing_list.dart';
@@ -19,6 +20,7 @@ import './views/manage_links.dart';
 
 import './db/database_manager.dart';
 import 'components/add_new.dart';
+import 'components/reorderable_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -161,23 +163,25 @@ class _MainPageState extends State<MainPage> {
         title: Text('Grocery Go'),
       ),
       drawer:_settingsDrawer(),
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
+      body: Material(
+        child: SafeArea(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
+              children: [
                 ItemListHeader(text: headerShoppingLists),
-                ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
+                ReorderableList(collection: Firestore.instance.collection('shopping_lists')),
                 AddNew(listType: 'shopping list'),
-                ItemListHeader(text: headerStores),
-                ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
-                AddNew(listType: 'store'),
               ],
             ),
-          );
-        }),
+                /*
+                ItemListHeader(text: headerShoppingLists),
+                ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
+
+                ItemListHeader(text: headerStores),
+                ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
+                AddNew(listType: 'store'), */
+              //],
+            ),
+          ),
     );
   }
 }
