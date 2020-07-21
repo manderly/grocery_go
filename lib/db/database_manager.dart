@@ -9,6 +9,18 @@ class DatabaseManager {
   final CollectionReference stores = Firestore.instance.collection('stores');
   final CollectionReference users = Firestore.instance.collection('user_data');
 
+  CollectionReference getShoppingLists() {
+    return shoppingLists;
+  }
+
+  Future<DocumentSnapshot> getUser(String userID) {
+    return users.document(userID).get();
+  }
+
+  CollectionReference getStores() {
+    return stores;
+  }
+
   Stream<QuerySnapshot> getShoppingListStream() {
     return shoppingLists.orderBy("name").snapshots();
   }

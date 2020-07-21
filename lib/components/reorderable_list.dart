@@ -1,25 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:grocery_go/components/list_item.dart';
+import 'package:grocery_go/models/item.dart';
+import 'package:grocery_go/models/shopping_list.dart';
 
 class ReorderableList extends StatelessWidget {
   final collection;
 
   ReorderableList({this.collection});
 
+  _temporary() {
+    print("temporary");
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 500,
-        child: ReorderableFirebaseList(
+      return ReorderableFirebaseList(
         collection: collection,
         indexKey: 'pos',
         itemBuilder: (BuildContext context, int index, DocumentSnapshot doc) {
-          return ListTile(
-            key: Key(doc.documentID),
-            title: Text(doc.data['name']),
-          );
+          var listItem = ShoppingList(doc);
+          //return ListItem(item: listItem, key: Key(doc.documentID), listType: 'shopping list', count: 3, onTap: _temporary, onInfoTap: _temporary);
+          return ListTile(key: Key(doc.documentID), title: Text(doc.data['name']));
         },
-        ),
     );
   }
 }
@@ -51,33 +54,33 @@ class _ReorderableFirebaseListState extends State<ReorderableFirebaseList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _saving,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.none || snapshot.connectionState == ConnectionState.done) {
-          return StreamBuilder<QuerySnapshot>(
-            stream: widget.collection.orderBy(widget.indexKey, descending: widget.descending).snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData) {
-                _docs = snapshot.data.documents;
-                return ReorderableListView(
-                  onReorder: _onReorder,
-                  children: List.generate(_docs.length, (int index) {
-                    return widget.itemBuilder(context, index, _docs[index]);
-                  }),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+        future: _saving,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.none || snapshot.connectionState == ConnectionState.done) {
+            return StreamBuilder<QuerySnapshot>(
+              stream: widget.collection.orderBy(widget.indexKey, descending: widget.descending).snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  _docs = snapshot.data.documents;
+                  return ReorderableListView(
+                    onReorder: _onReorder,
+                    children: List.generate(_docs.length, (int index) {
+                      return widget.itemBuilder(context, index, _docs[index]);
+                    }),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
     );
   }
 

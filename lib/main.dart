@@ -98,7 +98,23 @@ class _MainPageState extends State<MainPage> {
 
   _MainPageState();
 
+  DocumentSnapshot userData;
+
   final DatabaseManager db = DatabaseManager();
+
+  void getUserData() async {
+    DocumentSnapshot _userData = await db.getUser('Nr2JtF4tqSTrD14gp5Sr');
+    print(_userData.data.toString());
+    setState(() {
+      userData = _userData;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
 
   _goToList(ShoppingList list, int index) {
     print("navigating to: " + list.name + " list.id:" + list.id);
@@ -163,15 +179,24 @@ class _MainPageState extends State<MainPage> {
         title: Text('Grocery Go'),
       ),
       drawer:_settingsDrawer(),
-      body: Material(
-        child: SafeArea(
-            child: Column(
-              children: [
-                ItemListHeader(text: headerShoppingLists),
-                ReorderableList(collection: Firestore.instance.collection('shopping_lists')),
-                AddNew(listType: 'shopping list'),
-              ],
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Material(
+            child: Container(
+              height: userData != null ? (userData.data['shopping_list_count'] * 60).toDouble() : 0,
+              child: ReorderableList(collection: db.getShoppingLists()), //Firestore.instance.collection('shopping_lists')),
             ),
+          ),
+          AddNew(listType: 'shopping list'),
+          //ItemListHeader(text: headerShoppingLists),
+
+          //AddNew(listType: 'shopping list'),
+          //ReorderableList(collection: db.getStores()),
+          //AddNew(listType: 'store'),
+        ],
+      ),
                 /*
                 ItemListHeader(text: headerShoppingLists),
                 ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
@@ -180,9 +205,7 @@ class _MainPageState extends State<MainPage> {
                 ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
                 AddNew(listType: 'store'), */
               //],
-            ),
-          ),
-    );
+      );
   }
 }
 

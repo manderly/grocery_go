@@ -5,6 +5,7 @@ import 'package:timeago/timeago.dart' as timeago;
 class ListItem extends StatelessWidget {
 
   final item;
+  final key;
   final index;
   final parentListID;
   final listType;
@@ -12,7 +13,7 @@ class ListItem extends StatelessWidget {
   final onTap;
   final onInfoTap;
 
-  ListItem({Key key, this.item: "Unknown", this.index, this.listType, this.count, this.onTap, this.onInfoTap, this.parentListID});
+  ListItem({this.item, this.key, this.index, this.listType, this.count, this.onTap, this.onInfoTap, this.parentListID});
 
   buildDateString(date) {
     if (date != null) {
@@ -54,6 +55,7 @@ class ListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      key: key,
       title: Text(buildTitleString(), style: (listType == 'crossedOff' ? TextStyle(decoration: TextDecoration.lineThrough) : TextStyle(decoration: TextDecoration.none))),
       subtitle: Text(buildSubtitleString()),
       leading: FlutterLogo(),
