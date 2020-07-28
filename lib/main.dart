@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery_go/components/item_list_stream.dart';
 import 'package:grocery_go/views/existing_list.dart';
 import 'package:grocery_go/views/manage_links.dart';
+import 'package:grocery_go/views/manage_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './components/item_list_header.dart';
@@ -20,7 +21,6 @@ import './views/manage_links.dart';
 
 import './db/database_manager.dart';
 import 'components/add_new.dart';
-import 'components/reorderable_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +56,7 @@ class _GroceryGoAppState extends State<GroceryGoApp> {
       NewItem.routeName: (context) => NewItem(),
       ExistingItem.routeName: (context) => ExistingItem(),
       ManageLinks.routeName: (context) => ManageLinks(),
+      ManageList.routeName: (context) => ManageList(),
     };
 
     return MaterialApp(
@@ -114,6 +115,16 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     getUserData();
+  }
+
+  manageList(String listType) {
+    if (listType == 'shopping list') {
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getShoppingLists()));
+    } else if (listType == 'store') {
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getStores()));
+    } else {
+      print("Unhandled list type in main.dart, line 126");
+    }
   }
 
   _goToList(ShoppingList list, int index) {
@@ -179,17 +190,25 @@ class _MainPageState extends State<MainPage> {
         title: Text('Grocery Go'),
       ),
       drawer:_settingsDrawer(),
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          ItemListHeader(text: headerShoppingLists, listType: 'shopping list', onManageListTap: manageList),
+          ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
+          /*
           Material(
             child: Container(
               height: userData != null ? (userData.data['shopping_list_count'] * 60).toDouble() : 0,
               child: ReorderableList(collection: db.getShoppingLists()), //Firestore.instance.collection('shopping_lists')),
             ),
           ),
+          */
           AddNew(listType: 'shopping list'),
+          ItemListHeader(text: headerStores, listType: 'store', onManageListTap: manageList),
+          ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
+          AddNew(listType: 'store'),
           //ItemListHeader(text: headerShoppingLists),
 
           //AddNew(listType: 'shopping list'),
@@ -205,7 +224,8 @@ class _MainPageState extends State<MainPage> {
                 ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
                 AddNew(listType: 'store'), */
               //],
-      );
+      ),
+    );
   }
 }
 

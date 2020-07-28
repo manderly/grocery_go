@@ -22,11 +22,11 @@ class DatabaseManager {
   }
 
   Stream<QuerySnapshot> getShoppingListStream() {
-    return shoppingLists.orderBy("name").snapshots();
+    return shoppingLists.orderBy('pos', descending: false).snapshots();
   }
 
   Stream<QuerySnapshot> getStoresStream() {
-    return stores.orderBy("name").snapshots();
+    return stores.orderBy('pos', descending: false).snapshots();
   }
 
   Stream<QuerySnapshot> getActiveItemsStream(shoppingListID, storeID) {
@@ -57,6 +57,8 @@ class DatabaseManager {
   Future<DocumentReference> addShoppingList(ShoppingListDTO shoppingList) async {
     // create the new shopping list
     DocumentReference docRef = await shoppingLists.add(shoppingList.toJson());
+
+    // get the user document
     DocumentReference userRef = users.document('Nr2JtF4tqSTrD14gp5Sr');
     DocumentSnapshot userSnapshot = await userRef.get();
 
@@ -66,7 +68,6 @@ class DatabaseManager {
     // increase the total number of shopping lists the user has
     users.document(userRef.documentID).updateData({'shopping_list_count': FieldValue.increment(1)});
 
-    // return the doc ref
     return docRef;
   }
 
@@ -117,8 +118,19 @@ class DatabaseManager {
   }
 
   Future<DocumentReference> addStore(StoreDTO store) async {
+    // create the new store
     DocumentReference docRef = await stores.add(store.toJson());
-    stores.document(docRef.documentID).updateData({'id':docRef.documentID});
+
+    // get the user document
+    DocumentReference userRef = users.document('Nr2JtF4tqSTrD14gp5Sr');
+    DocumentSnapshot userSnapshot = await userRef.get();
+
+    // give the new store a "pos" based on how many stores the user has
+    stores.document(docRef.documentID).updateData({'id':docRef.documentID, 'pos': userSnapshot['stores_count']+1});
+
+    // increase the total number of stores the user has
+    users.document(userRef.documentID).updateData({'stores_count': FieldValue.increment(1)});
+
     return docRef;
   }
 
