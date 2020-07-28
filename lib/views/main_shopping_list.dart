@@ -10,6 +10,7 @@ import 'package:grocery_go/models/shopping_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'edit_item.dart';
+import 'manage_list.dart';
 
 class SelectedStore {
   String id;
@@ -79,6 +80,18 @@ class _MainShoppingListState extends State<MainShoppingList> {
     getSharedPrefs(); // sets selectedStoreID
     activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStoreID);
     inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
+  }
+
+  manageList(String listType) {
+    // todo: these items aren't displaying because they don't have 'pos' in the traditional sense, they have that subobject full of positions
+    // todo: need to sort by a different criteria besides 'pos'
+    if (listType == 'items') {
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id)));
+    } else if (listType == 'crossedOff') {
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id)));
+    } else {
+      print("Unhandled list type in main_shopping_list.dart, line 92");
+    }
   }
 
   Future getItems(crossedOff) async {
@@ -154,10 +167,10 @@ class _MainShoppingListState extends State<MainShoppingList> {
                       ],
                       ),
                     ),
-                    ItemListHeader(text: "Items"),
+                    ItemListHeader(text: "Items", listType: 'items', onManageListTap: manageList),
                     ItemListStream(dbStream: activeItemsStream, listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
                     AddNew(listType: 'item', parentList: widget.list),
-                    ItemListHeader(text: "Crossed Off"),
+                    ItemListHeader(text: "Crossed Off", listType: 'crossedOff', onManageListTap: manageList),
                     ItemListStream(dbStream: inactiveItemsStream, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
                     DeleteAll(), // todo: don't show if the crossedOff list length is zero
                   ],
