@@ -54,6 +54,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
       selectedStoreID = prefs.getString(widget.list.id) ?? 'default';
       selectedStoreName = _getStoreName(selectedStoreID);
     });
+    return selectedStoreID;
   }
 
   _setSelectedStore(String id, String name) async {
@@ -77,9 +78,10 @@ class _MainShoppingListState extends State<MainShoppingList> {
   @override
   void initState() {
     super.initState();
-    getSharedPrefs(); // sets selectedStoreID
-    activeItemsStream = db.getActiveItemsStream(widget.list.id, selectedStoreID);
-    inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
+    getSharedPrefs().then((storeIDFromPrefs) {
+      activeItemsStream = db.getActiveItemsStream(widget.list.id, storeIDFromPrefs); // should get selectedStoreID from state
+      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
+    }); // sets selectedStoreID
   }
 
   manageList(String listType) {
