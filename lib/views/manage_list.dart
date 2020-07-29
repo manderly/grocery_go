@@ -3,7 +3,9 @@ import 'package:grocery_go/components/reorderable_list.dart';
 
 class ManageListArguments {
   final collection;
-  ManageListArguments(this.collection);
+  final String sortListName;
+
+  ManageListArguments(this.collection, this.sortListName);
 }
 
 class ManageList extends StatelessWidget {
@@ -22,7 +24,7 @@ class ManageList extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: ReorderableList(collection: args.collection),
+          child: ReorderableList(collection: args.collection, sortListName: args.sortListName),
         ),
       ),
     );

@@ -83,12 +83,10 @@ class _MainShoppingListState extends State<MainShoppingList> {
   }
 
   manageList(String listType) {
-    // todo: these items aren't displaying because they don't have 'pos' in the traditional sense, they have that subobject full of positions
-    // todo: need to sort by a different criteria besides 'pos'
     if (listType == 'items') {
-      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id)));
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id), selectedStoreID));
     } else if (listType == 'crossedOff') {
-      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id)));
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id), selectedStoreID));
     } else {
       print("Unhandled list type in main_shopping_list.dart, line 92");
     }

@@ -119,9 +119,9 @@ class _MainPageState extends State<MainPage> {
 
   manageList(String listType) {
     if (listType == 'shopping list') {
-      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getShoppingListsCollection()));
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getShoppingListsCollection(), 'default'));
     } else if (listType == 'store') {
-      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getStoresCollection()));
+      Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getStoresCollection(), 'default'));
     } else {
       print("Unhandled list type in main.dart, line 126");
     }

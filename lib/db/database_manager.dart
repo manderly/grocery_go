@@ -26,11 +26,11 @@ class DatabaseManager {
   }
 
   Stream<QuerySnapshot> getShoppingListStream() {
-    return shoppingLists.orderBy('pos', descending: false).snapshots();
+    return shoppingLists.orderBy('listPositions.default', descending: false).snapshots();
   }
 
   Stream<QuerySnapshot> getStoresStream() {
-    return stores.orderBy('pos', descending: false).snapshots();
+    return stores.orderBy('listPositions.default', descending: false).snapshots();
   }
 
   Stream<QuerySnapshot> getActiveItemsStream(shoppingListID, storeID) {
@@ -67,7 +67,7 @@ class DatabaseManager {
     DocumentSnapshot userSnapshot = await userRef.get();
 
     // give the new shopping list a "pos" based on how many shopping lists the user has
-    shoppingLists.document(docRef.documentID).updateData({'id':docRef.documentID, 'pos': userSnapshot['shopping_list_count']+1});
+    shoppingLists.document(docRef.documentID).updateData({'id':docRef.documentID, 'listPositions.default': userSnapshot['shopping_list_count']+1});
 
     // increase the total number of shopping lists the user has
     users.document(userRef.documentID).updateData({'shopping_list_count': FieldValue.increment(1)});
@@ -130,7 +130,7 @@ class DatabaseManager {
     DocumentSnapshot userSnapshot = await userRef.get();
 
     // give the new store a "pos" based on how many stores the user has
-    stores.document(docRef.documentID).updateData({'id':docRef.documentID, 'pos': userSnapshot['stores_count']+1});
+    stores.document(docRef.documentID).updateData({'id':docRef.documentID, 'listPositions.default': userSnapshot['stores_count']+1});
 
     // increase the total number of stores the user has
     users.document(userRef.documentID).updateData({'stores_count': FieldValue.increment(1)});
@@ -166,9 +166,19 @@ class DatabaseManager {
   }
 
   Future<DocumentReference> createItem(String parentListID, ItemDTO item) async {
-    shoppingLists.document(parentListID).updateData({'totalItems': FieldValue.increment(1)});
+    // create the new item
     DocumentReference itemDocRef = await shoppingLists.document(parentListID).collection('items').add(item.toJson());
-    itemDocRef.updateData({'id':itemDocRef.documentID});
+
+    // get its PARENT LIST
+    DocumentReference shoppingListRef = shoppingLists.document(parentListID);
+    DocumentSnapshot shoppingListSnap = await shoppingListRef.get();
+
+    // give the new store a "pos" based on how many stores the user has
+    itemDocRef.updateData({'id':itemDocRef.documentID, 'listPositions.default':shoppingListSnap.data['totalItems']+1});
+
+    // increase the total number of items this list has
+    shoppingLists.document(parentListID).updateData({'totalItems': FieldValue.increment(1)});
+
     return itemDocRef;
   }
 

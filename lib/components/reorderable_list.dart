@@ -1,20 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:grocery_go/models/shopping_list.dart';
 
 class ReorderableList extends StatelessWidget {
   final collection;
+  final sortListName;
 
-  ReorderableList({this.collection});
+  ReorderableList({@required this.collection, @required this.sortListName});
 
   @override
   Widget build(BuildContext context) {
       return ReorderableFirebaseList(
         collection: collection,
-        indexKey: 'pos',
+        indexKey: 'listPositions.$sortListName',
         itemBuilder: (BuildContext context, int index, DocumentSnapshot doc) {
-          var listItem = ShoppingList(doc);
-          //return ListItem(item: listItem, key: Key(doc.documentID), listType: 'shopping list', count: 3, onTap: _temporary, onInfoTap: _temporary);
           return ListTile(key: Key(doc.documentID), title: Text(doc.data['name']), trailing: Icon(Icons.reorder));
         },
     );
