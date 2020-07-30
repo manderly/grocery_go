@@ -85,7 +85,7 @@ class _MainShoppingListState extends State<MainShoppingList> {
     }); // sets selectedStoreID
   }
 
-  manageList(context, listType) {
+  manageList(listType) {
     if (listType == 'items') {
       Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id), selectedStoreID));
     } else if (listType == 'crossedOff') {
@@ -108,13 +108,6 @@ class _MainShoppingListState extends State<MainShoppingList> {
           'lastUpdated': DateTime.now()
         }
     );
-/*
-    setState(() {
-      getSharedPrefs().then((storeIDFromPrefs) {
-        activeItemsStream = db.getActiveItemsStream(widget.list.id, storeIDFromPrefs); //activeItemsStream;
-        inactiveItemsStream = inactiveItemsStream = db.getInactiveItemsStream(widget.list.id, storeIDFromPrefs); //inactiveItemsStream;
-      });
-    }); */
   }
 
   @override
@@ -165,10 +158,10 @@ class _MainShoppingListState extends State<MainShoppingList> {
                       ),
                     ),
                     ItemListHeader(text: "Items", listType: 'items', onManageListTap: manageList),
-                    ItemListStream(dbStream: activeItemsStream, listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
+                    ItemListStream(dbStream: activeItemsStream, sortBy: selectedStoreID, listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
                     AddNew(listType: 'item', parentList: widget.list),
                     ItemListHeader(text: "Crossed Off", listType: 'crossedOff', onManageListTap: manageList),
-                    ItemListStream(dbStream: inactiveItemsStream, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
+                    ItemListStream(dbStream: inactiveItemsStream, sortBy: selectedStoreID, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
                     DeleteAll(), // todo: don't show if the crossedOff list length is zero
                   ],
                 ),

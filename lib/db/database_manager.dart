@@ -36,7 +36,6 @@ class DatabaseManager {
   Stream<QuerySnapshot> getActiveItemsStream(shoppingListID, storeID) {
     return shoppingLists.document(shoppingListID).collection('items')
         .where('isCrossedOff', isEqualTo: false)
-        //.orderBy('listPositions.$storeID')
         .snapshots();
   }
 
@@ -174,7 +173,15 @@ class DatabaseManager {
     DocumentSnapshot shoppingListSnap = await shoppingListRef.get();
 
     // give the new store a "pos" based on how many stores the user has
-    itemDocRef.updateData({'id':itemDocRef.documentID, 'listPositions.default':shoppingListSnap.data['totalItems']+1});
+    itemDocRef.updateData({'id':itemDocRef.documentID, 'listPositions.default': shoppingListSnap.data['totalItems']+1});
+
+    // for every store that's linked to the parent shopping list, give it a position
+    // todo: build the map locally and then update it all at once?
+
+    shoppingListSnap.data['stores'].forEach((store, value) {
+      print(store + value);
+      itemDocRef.updateData({'listPositions.$store': shoppingListSnap.data['totalItems']+1});
+    });
 
     // increase the total number of items this list has
     shoppingLists.document(parentListID).updateData({'totalItems': FieldValue.increment(1)});

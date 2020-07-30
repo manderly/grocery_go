@@ -194,10 +194,10 @@ class _MainPageState extends State<MainPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ItemListHeader(text: headerShoppingLists, listType: 'shopping list', onManageListTap: manageList),
-          ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
+          ItemListStream(dbStream: db.getShoppingListStream(), sortBy: 'default', listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
           AddNew(listType: 'shopping list'),
           ItemListHeader(text: headerStores, listType: 'store', onManageListTap: manageList),
-          ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
+          ItemListStream(dbStream: db.getStoresStream(), sortBy: 'default', listType: 'store', onTap: _editStore, onInfoTap: _editStore),
           AddNew(listType: 'store'),
         ],
       ),
