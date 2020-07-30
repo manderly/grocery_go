@@ -31,15 +31,13 @@ class _EditItemFormState extends State<EditItemForm> {
   void saveItem(BuildContext context) async {
     final formState = formKey.currentState;
 
-    print(args);
-
     if (formState.validate()) {
       formKey.currentState.save();
       itemFields.lastUpdated = Timestamp.fromDate(DateTime.now());
 
-      var docRef = await db.updateItem(args.parentListID, itemFields);
-
-      Navigator.of(context).pop(docRef);
+      db.updateItem(args.parentListID, itemFields).then((val) {
+        Navigator.of(context).pop();
+      });
     }
   }
 

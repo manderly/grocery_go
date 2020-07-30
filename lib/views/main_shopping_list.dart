@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/components/add_new.dart';
@@ -42,16 +43,16 @@ class _MainShoppingListState extends State<MainShoppingList> {
   var activeItems = List<Item>();
   var inactiveItems = List<Item>();
 
-  var activeItemsStream;
+  Stream<QuerySnapshot> activeItemsStream;
   var inactiveItemsStream;
 
-  String selectedStoreID = 'default';
+  String selectedStoreID = '';
   String selectedStoreName = '';
 
   Future<String> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      selectedStoreID = prefs.getString(widget.list.id) ?? 'default';
+      selectedStoreID = prefs.getString(widget.list.id);
       selectedStoreName = _getStoreName(selectedStoreID);
     });
     return selectedStoreID;
@@ -63,9 +64,9 @@ class _MainShoppingListState extends State<MainShoppingList> {
 
     setState(() {
       selectedStoreID = id;
-      selectedStoreName = _getStoreName(selectedStoreID);
+      selectedStoreName = _getStoreName(id);
       activeItemsStream = db.getActiveItemsStream(widget.list.id, id);
-      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
+      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id, id);
     });
 
     Navigator.pop(context, id);
@@ -80,11 +81,11 @@ class _MainShoppingListState extends State<MainShoppingList> {
     super.initState();
     getSharedPrefs().then((storeIDFromPrefs) {
       activeItemsStream = db.getActiveItemsStream(widget.list.id, storeIDFromPrefs); // should get selectedStoreID from state
-      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id);
+      inactiveItemsStream = db.getInactiveItemsStream(widget.list.id, storeIDFromPrefs);
     }); // sets selectedStoreID
   }
 
-  manageList(String listType) {
+  manageList(context, listType) {
     if (listType == 'items') {
       Navigator.pushNamed(context, ManageList.routeName, arguments: ManageListArguments(db.getItemsCollection(widget.list.id), selectedStoreID));
     } else if (listType == 'crossedOff') {
@@ -94,17 +95,11 @@ class _MainShoppingListState extends State<MainShoppingList> {
     }
   }
 
-  Future getItems(crossedOff) async {
-    var result = await db.getListItems(widget.list.id, crossedOff);
-    return result;
-  }
-
   _editItem(Item item) {
     Navigator.pushNamed(context, ExistingItem.routeName, arguments: EditItemArguments(item, widget.list.id, widget.list.name));
   }
 
   _updateCrossedOffStatus(Item item, int index) async {
-    print(item.name + " at index: " + index.toString() + " isCrossedOff: " + item.isCrossedOff.toString());
     await db.updateItemCrossedOffStatus(
         widget.list.id,
         item.id,
@@ -113,11 +108,13 @@ class _MainShoppingListState extends State<MainShoppingList> {
           'lastUpdated': DateTime.now()
         }
     );
-
+/*
     setState(() {
-      activeItemsStream = activeItemsStream;
-      inactiveItemsStream = inactiveItemsStream;
-    });
+      getSharedPrefs().then((storeIDFromPrefs) {
+        activeItemsStream = db.getActiveItemsStream(widget.list.id, storeIDFromPrefs); //activeItemsStream;
+        inactiveItemsStream = inactiveItemsStream = db.getInactiveItemsStream(widget.list.id, storeIDFromPrefs); //inactiveItemsStream;
+      });
+    }); */
   }
 
   @override

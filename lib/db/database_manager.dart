@@ -34,14 +34,13 @@ class DatabaseManager {
   }
 
   Stream<QuerySnapshot> getActiveItemsStream(shoppingListID, storeID) {
-    print(storeID);
     return shoppingLists.document(shoppingListID).collection('items')
         .where('isCrossedOff', isEqualTo: false)
-        .orderBy('listPositions.$storeID')
+        //.orderBy('listPositions.$storeID')
         .snapshots();
   }
 
-  Stream<QuerySnapshot> getInactiveItemsStream(shoppingListID) {
+  Stream<QuerySnapshot> getInactiveItemsStream(shoppingListID, storeID) {
     return shoppingLists.document(shoppingListID).collection('items')
         .where('isCrossedOff', isEqualTo: true)
         .snapshots();

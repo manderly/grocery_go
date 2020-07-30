@@ -105,7 +105,6 @@ class _MainPageState extends State<MainPage> {
 
   void getUserData() async {
     DocumentSnapshot _userData = await db.getUser('Nr2JtF4tqSTrD14gp5Sr');
-    print(_userData.data.toString());
     setState(() {
       userData = _userData;
     });
@@ -128,7 +127,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   _goToList(ShoppingList list, int index) {
-    print("navigating to: " + list.name + " list.id:" + list.id);
     Navigator.pushNamed(
         context,
         MainShoppingList.routeName,
@@ -197,33 +195,12 @@ class _MainPageState extends State<MainPage> {
         children: [
           ItemListHeader(text: headerShoppingLists, listType: 'shopping list', onManageListTap: manageList),
           ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
-          /*
-          Material(
-            child: Container(
-              height: userData != null ? (userData.data['shopping_list_count'] * 60).toDouble() : 0,
-              child: ReorderableList(collection: db.getShoppingLists()), //Firestore.instance.collection('shopping_lists')),
-            ),
-          ),
-          */
           AddNew(listType: 'shopping list'),
           ItemListHeader(text: headerStores, listType: 'store', onManageListTap: manageList),
           ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
           AddNew(listType: 'store'),
-          //ItemListHeader(text: headerShoppingLists),
-
-          //AddNew(listType: 'shopping list'),
-          //ReorderableList(collection: db.getStores()),
-          //AddNew(listType: 'store'),
         ],
       ),
-                /*
-                ItemListHeader(text: headerShoppingLists),
-                ItemListStream(dbStream: db.getShoppingListStream(), listType: 'shopping list', onTap: _goToList, onInfoTap: _editList),
-
-                ItemListHeader(text: headerStores),
-                ItemListStream(dbStream: db.getStoresStream(), listType: 'store', onTap: _editStore, onInfoTap: _editStore),
-                AddNew(listType: 'store'), */
-              //],
       ),
     );
   }
