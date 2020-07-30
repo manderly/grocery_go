@@ -17,7 +17,7 @@ class ListItem extends StatelessWidget {
 
   buildDateString(date) {
     if (date != null) {
-      return DateFormat.yMMMd().format(date.toDate());
+      return DateFormat.yMd().format(date.toDate());
     } else {
       return 'unknown date';
     }
@@ -44,7 +44,8 @@ class ListItem extends StatelessWidget {
     } else if (listType == 'store') {
       return item.address;
     } else if (listType == 'item') {
-      return 'Added by ' + (item?.addedBy ?? 'no one') + ' on ' + buildDateString(item.lastUpdated);
+      // Added 12/31/20 by Name
+      return 'Added ' + buildDateString(item.lastUpdated) + ' by ' + (item?.addedBy ?? 'no one');
     } else if (listType == 'crossedOff') {
       return '' + buildCrossedOffDate(item.lastUpdated) + ' at storeName';
     } else {
