@@ -8,14 +8,19 @@ class ManageLinksArguments {
   final String parentName;
   final String parentType;
 
-  ManageLinksArguments({this.dbStream, this.linkedEntities, this.parentID, this.parentName, this.parentType});
+  ManageLinksArguments(this.dbStream, this.linkedEntities, this.parentID, this.parentName, this.parentType);
 }
 
 class ManageLinks extends StatefulWidget {
 
   static const routeName = '/manageLinks';
 
-  ManageLinks({Key key});
+  final dbStream;
+  final linkedEntities;
+  final String parentID;
+  final String parentName;
+  final String parentType;
+  ManageLinks({Key key, this.dbStream, this.linkedEntities, this.parentID, this.parentName, this.parentType});
 
   @override
   _ManageLinks createState() => _ManageLinks();
@@ -26,7 +31,7 @@ class _ManageLinks extends State<ManageLinks> {
   @override
   Widget build(BuildContext context) {
 
-    final ManageLinksArguments args = ModalRoute.of(context).settings.arguments;
+    //final ManageLinksArguments args = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
@@ -37,13 +42,13 @@ class _ManageLinks extends State<ManageLinks> {
           child: Padding(
             padding: EdgeInsets.all(20),
             child: StreamBuilder(
-              stream: args.dbStream,
+              stream: widget.dbStream,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
                 if (snapshot.hasData && !snapshot.data.documents.isEmpty) {
-                  return ToggleList(parentType: args.parentType, parentID: args.parentID, parentName: args.parentName, list: snapshot.data.documents, linkedEntities: args.linkedEntities);
+                  return ToggleList(parentType: widget.parentType, parentID: widget.parentID, parentName: widget.parentName, list: snapshot.data.documents, linkedEntities: widget.linkedEntities);
                 } else {
                   return Column(
                     children: [

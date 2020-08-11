@@ -26,11 +26,13 @@ class DatabaseManager {
   }
 
   Stream<QuerySnapshot> getShoppingListStream() {
-    return shoppingLists.orderBy('listPositions.default', descending: false).snapshots();
+    // do not use .orderBy('listPositions.default', descending: false) with a stream
+    // causes stream to stop updating
+    return shoppingLists.snapshots();
   }
 
   Stream<QuerySnapshot> getStoresStream() {
-    return stores.orderBy('listPositions.default', descending: false).snapshots();
+    return stores.snapshots();
   }
 
   Stream<QuerySnapshot> getActiveItemsStream(shoppingListID, storeID) {
@@ -179,7 +181,6 @@ class DatabaseManager {
     // todo: build the map locally and then update it all at once?
 
     shoppingListSnap.data['stores'].forEach((store, value) {
-      print(store + value);
       itemDocRef.updateData({'listPositions.$store': shoppingListSnap.data['totalItems']+1});
     });
 

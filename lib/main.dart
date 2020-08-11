@@ -55,7 +55,7 @@ class _GroceryGoAppState extends State<GroceryGoApp> {
       NewStore.routeName: (context) => NewStore(),
       NewItem.routeName: (context) => NewItem(),
       ExistingItem.routeName: (context) => ExistingItem(),
-      ManageLinks.routeName: (context) => ManageLinks(),
+      //ManageLinks.routeName: (context) => ManageLinks(),
       ManageList.routeName: (context) => ManageList(),
     };
 
@@ -73,6 +73,20 @@ class _GroceryGoAppState extends State<GroceryGoApp> {
                   list: args.list
               );
             },
+          );
+        } else if (settings.name == ManageLinks.routeName) {
+          final ManageLinksArguments args = settings.arguments;
+
+          return MaterialPageRoute(
+            builder: (context) {
+              return ManageLinks(
+                dbStream: args.dbStream,
+                linkedEntities: args.linkedEntities,
+                parentID: args.parentID,
+                parentName: args.parentName,
+                parentType: args.parentType,
+              );
+            }
           );
         }
 
