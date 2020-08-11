@@ -100,6 +100,14 @@ class _MainShoppingListState extends State<MainShoppingList> {
   }
 
   _updateCrossedOffStatus(Item item, int index) async {
+
+    // update "locally"
+    if (item.isCrossedOff) {
+      widget.list.activeItems++;
+    } else {
+      widget.list.activeItems--;
+    }
+
     await db.updateItemCrossedOffStatus(
         widget.list.id,
         item.id,
@@ -160,14 +168,37 @@ class _MainShoppingListState extends State<MainShoppingList> {
                     ItemListHeader(text: "Items", listType: 'items', onManageListTap: manageList),
                     ItemListStream(dbStream: activeItemsStream, sortBy: selectedStoreID, listType: 'item', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
                     AddNew(listType: 'item', parentList: widget.list),
-                    ItemListHeader(text: "Crossed Off", listType: 'crossedOff', onManageListTap: manageList),
-                    ItemListStream(dbStream: inactiveItemsStream, sortBy: selectedStoreID, listType: 'crossedOff', onTap: _updateCrossedOffStatus, onInfoTap: _editItem, parentList: widget.list),
-                    DeleteAll(), // todo: don't show if the crossedOff list length is zero
+                    _crossedOff(),
                   ],
                 ),
               );
             }),
     );
+  }
+
+  _crossedOff() {
+    if (widget.list.activeItems < widget.list.totalItems) {
+      return Container(
+          child: Column(
+              children: [
+                ItemListHeader(text: "Crossed Off",
+                    listType: 'crossedOff',
+                    onManageListTap: manageList),
+                ItemListStream(dbStream: inactiveItemsStream,
+                    sortBy: selectedStoreID,
+                    listType: 'crossedOff',
+                    onTap: _updateCrossedOffStatus,
+                    onInfoTap: _editItem,
+                    parentList: widget.list),
+                DeleteAll(),
+              ]
+          )
+      );
+    } else {
+      return Container(
+        child: Text(''),
+      );
+    }
   }
 
   _storeOptions(list, selectAction) {
