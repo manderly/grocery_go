@@ -41,7 +41,10 @@ class _ShoppingListFormState extends State<ShoppingListForm> {
         shoppingListFields.stores = widget.shoppingList.stores;
         await db.updateShoppingList(widget.shoppingList.id, shoppingListFields);
       } else {
+        // creating a new shopping list
         shoppingListFields.stores = Map();
+        shoppingListFields.listPositions = Map();
+        shoppingListFields.listPositions['default'] = 1000;
         await db.addShoppingList(shoppingListFields);
       }
 

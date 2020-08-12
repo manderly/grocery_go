@@ -5,10 +5,11 @@ class ShoppingListDTO {
   String date;
   int activeItems;
   int totalItems;
+  Map listPositions;
   Map stores;
 
   String toString() {
-    return 'id: $id, name: $name, date: $date, activeItems: $activeItems, totalItems: $totalItems, stores: $stores';
+    return 'id: $id, name: $name, date: $date, activeItems: $activeItems, totalItems: $totalItems, listPositions: $listPositions, stores: $stores';
   }
 
   Map<String, dynamic> toJson() => <String, dynamic> {
@@ -17,6 +18,7 @@ class ShoppingListDTO {
     'date': this.date,
     'activeItems': this.activeItems ?? 0,
     'totalItems': this.totalItems ?? 0,
+    'listPositions': this.listPositions ?? Map(),
     'stores': this.stores,
   };
 }

@@ -186,6 +186,8 @@ class DatabaseManager {
 
     // increase the total number of items this list has
     shoppingLists.document(parentListID).updateData({'totalItems': FieldValue.increment(1)});
+    // increase the number of active items this list has
+    shoppingLists.document(parentListID).updateData({'activeItems': FieldValue.increment(1)});
 
     return itemDocRef;
   }
