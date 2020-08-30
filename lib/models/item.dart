@@ -3,15 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Item {
   String id;
   String name;
-  String date;
+  Timestamp date;
   int quantity;
   bool subsOk;
   List substitutions;
   String addedBy;
-  String lastUpdated;
+  Timestamp lastUpdated;
   bool private;
   bool urgent;
   bool isCrossedOff;
+  Map listPositions;
 
   Item(DocumentSnapshot document) {
     this.id = document['id'];
@@ -25,5 +26,6 @@ class Item {
     this.private = document['private'];
     this.urgent = document['urgent'];
     this.isCrossedOff = document['isCrossedOff'];
+    this.listPositions = document['listPositions'];
   }
 }

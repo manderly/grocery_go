@@ -3,11 +3,9 @@ import 'package:grocery_go/models/item.dart';
 import 'package:grocery_go/models/shopping_list.dart';
 import 'package:grocery_go/models/store.dart';
 
-import 'add_new.dart';
-import 'delete_all.dart';
 import 'list_item.dart';
 
-class ItemList extends StatelessWidget {
+class ItemList extends StatefulWidget {
 
   final List list;
   final String listType;
@@ -15,50 +13,45 @@ class ItemList extends StatelessWidget {
   final onInfoTap;
   final ShoppingList parentList;
 
-  ItemList({Key key, @required this.list, @required this.listType, @required this.onItemTap, @required this.onInfoTap, this.parentList});
+  ItemList(
+      {Key key, @required this.list, @required this.listType, @required this.onItemTap, @required this.onInfoTap, this.parentList});
+
+  @override
+  State createState() => _ItemListState();
+}
+
+class _ItemListState extends State<ItemList> {
 
   @override
   Widget build(BuildContext context) {
 
     int getCount(item) {
-      if (listType == 'shopping list') {
-        return item.itemCount;
+      if (widget.listType == 'shopping list') {
+        return item.activeItems;
       } else {
-        return list.length;
+        return widget?.list?.length;
       }
     }
 
     return ListView.builder(
+        key: widget.key,
         shrinkWrap: true, // gives it a size
         primary: false, // so the shopping and store lists don't scroll independently
-        itemCount: list.length + 1,
+        itemCount: widget?.list?.length ?? 0 + 1,
         itemBuilder: (BuildContext context, int index) {
-          if (index == list.length) {
-            if (listType == 'crossedOff') {
-              return DeleteAll();
-            } else if (listType == 'store' || listType == 'shopping list') {
-              return AddNew(listType: listType);
-            } else if (listType == 'item') {
-              return AddNew(listType: listType, parentList: parentList);
-            } else {
-              return Text("Invalid list type");
-            }
+          var listItem;
+
+          if (widget.listType == 'shopping list') {
+            listItem = ShoppingList(widget.list[index]);
+          } else if (widget.listType == 'store') {
+            listItem = Store(widget.list[index]);
+          } else if (widget.listType == 'item' || widget.listType == 'crossedOff') {
+            listItem = Item(widget.list[index]);
           } else {
-
-            var listItem;
-
-            if (listType == 'shopping list') {
-              listItem = ShoppingList(list[index]);
-            } else if (listType == 'store') {
-              listItem = Store(list[index]);
-            } else if (listType == 'item' || listType == 'crossedOff') {
-              listItem = Item(list[index]);
-            } else {
-              print("Unhandled list item type");
-            }
-
-            return ListItem(item: listItem, listType: listType, count: getCount(listItem), onTap: onItemTap, onInfoTap: onInfoTap);
+            print("Unhandled list item type:" + widget.listType.toString());
           }
+
+          return ListItem(item: listItem, index: index, listType: widget.listType, count: getCount(listItem), onTap: widget.onItemTap, onInfoTap: widget.onInfoTap, parentListID: widget.parentList?.id);
         }
     );
   }

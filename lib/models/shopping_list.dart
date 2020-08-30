@@ -5,14 +5,16 @@ class ShoppingList {
   String name;
   String listType = 'shopping list';
   String date;
-  int itemCount;
+  int activeItems;
+  int totalItems;
   Map stores;
 
   ShoppingList(DocumentSnapshot document) {
     this.id = document['id'];
     this.name = document['name'];
     this.date = document['date'];
-    this.itemCount = document['itemCount'];
+    this.activeItems = document['activeItems'];
+    this.totalItems = document['totalItems'];
     this.stores = document['stores'];
   }
 }

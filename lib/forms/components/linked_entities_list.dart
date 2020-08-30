@@ -2,34 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:grocery_go/views/manage_links.dart';
 import '../../db/database_manager.dart';
 
-class LinkedEntitiesList extends StatelessWidget {
+class LinkedEntitiesList extends StatefulWidget {
   final String parentID;
   final String parentName;
   final String listType;
   final Map linkedEntities;
   final String entities;
 
-  LinkedEntitiesList(this.parentID, this.listType, this.parentName, this.linkedEntities, this.entities);
+  LinkedEntitiesList(this.parentID, this.listType, this.parentName,
+      this.linkedEntities, this.entities);
+
+  @override
+  _LinkedEntitiesList createState() => _LinkedEntitiesList();
+}
+
+class _LinkedEntitiesList extends State<LinkedEntitiesList> {
 
   final DatabaseManager db = DatabaseManager();
 
   @override
   Widget build(BuildContext context) {
 
-    _goToManageLinks() {
+    _goToManageLinks() async {
       var stream;
-      if (listType == "shopping list") {
+      if (widget.listType == "shopping list") {
         stream = db.getStoresStream();
-      } else if (listType == "store") {
+      } else if (widget.listType == "store") {
         stream = db.getShoppingListStream();
       } else {
         print("Error: unrecognized list type in linked_entities_list.dart");
       }
 
-      Navigator.pushNamed(context, ManageLinks.routeName, arguments: ManageLinksArguments(dbStream: stream, linkedEntities: linkedEntities, parentID: parentID, parentName: parentName, parentType: listType));
+      await Navigator.pushNamed(context, ManageLinks.routeName, arguments: ManageLinksArguments(stream, widget.linkedEntities, widget.parentID, widget.parentName, widget.listType));
+      setState(() {});
     }
 
-    var _list = linkedEntities != null ? linkedEntities.values.toList() : [];
+    var _list = widget.linkedEntities != null ? widget.linkedEntities.values.toList() : [];
 
     return Container(
       height:300,
@@ -44,14 +52,14 @@ class LinkedEntitiesList extends StatelessWidget {
     }
 
   _listTitle() {
-    return Text("$entities", style: TextStyle(fontSize:16, fontWeight: FontWeight.bold));
+    return Text('${widget.entities}', style: TextStyle(fontSize:16, fontWeight: FontWeight.bold));
   }
 
   _entityList(list) {
     const MAX_LIST_LEN = 4;
 
     if (list == null || list?.length == 0) {
-      return [Text("This $listType is not attached to any $entities yet.")];
+      return [Text("This ${widget.listType} is not attached to any ${widget.entities} yet.")];
     } else {
       var listLen = list.length > MAX_LIST_LEN ? MAX_LIST_LEN : list.length;
       var entityList = List();
@@ -66,10 +74,9 @@ class LinkedEntitiesList extends StatelessWidget {
   }
 
   _manageLinksButton(onPressedAction) {
-
     return FlatButton(
       onPressed: () => onPressedAction(),
-      child: Text("Add/Remove $entities"),
+      child: Text("Add/Remove ${widget.entities}"),
       textColor:Colors.blue,
       padding: EdgeInsets.all(0),
     );

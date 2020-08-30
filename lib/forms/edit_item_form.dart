@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_go/db/database_manager.dart';
 import 'package:grocery_go/db/item_dto.dart';
@@ -30,15 +31,13 @@ class _EditItemFormState extends State<EditItemForm> {
   void saveItem(BuildContext context) async {
     final formState = formKey.currentState;
 
-    print(args);
-
     if (formState.validate()) {
       formKey.currentState.save();
-      itemFields.lastUpdated = DateTime.now().toString();
+      itemFields.lastUpdated = Timestamp.fromDate(DateTime.now());
 
-      var docRef = await db.updateItem(args.parentListID, itemFields);
-
-      Navigator.of(context).pop(docRef);
+      db.updateItem(args.parentListID, itemFields).then((val) {
+        Navigator.of(context).pop();
+      });
     }
   }
 
@@ -89,6 +88,7 @@ class _EditItemFormState extends State<EditItemForm> {
     itemFields.private = args.item.private;
     itemFields.urgent = args.item.urgent;
     itemFields.isCrossedOff = args.item.isCrossedOff;
+    itemFields.listPositions = args.item.listPositions;
     return super.initState();
   }
 

@@ -1,21 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ItemDTO {
 
   String id;
   String name;
-  String date;
+  Timestamp date;
   int quantity;
   bool subsOk;
   List substitutions;
   String addedBy;
-  String lastUpdated;
+  Timestamp lastUpdated;
   bool private;
   bool urgent;
   bool isCrossedOff;
+  Map listPositions;
 
   String toString() {
     return 'id: $id, name: $name, date: $date, '
         'quantity: $quantity, subsOk: $subsOk, substitutions: $substitutions, '
-        'addedBy: $addedBy, lastUpdated: $lastUpdated, private: $private, urgent: $urgent, isCrossedOff: $isCrossedOff';
+        'addedBy: $addedBy, lastUpdated: $lastUpdated, private: $private, urgent: $urgent, isCrossedOff: $isCrossedOff, listPositions: $listPositions';
   }
 
   Map<String, dynamic> toJson() => <String, dynamic> {
@@ -30,5 +33,6 @@ class ItemDTO {
     'private': this.private,
     'urgent':this.urgent,
     'isCrossedOff':this.isCrossedOff,
+    'listPositions':this.listPositions,
   };
 }

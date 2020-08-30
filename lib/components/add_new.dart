@@ -15,7 +15,7 @@ class AddNew extends StatelessWidget {
     } else if (listType == 'store') {
       Navigator.pushNamed(context, '/newStore');
     } else if (listType == 'item') {
-      final result = await Navigator.pushNamed(context, '/newItem', arguments: NewItemArguments(parentList.id, parentList.name));
+      await Navigator.pushNamed(context, '/newItem', arguments: NewItemArguments(parentList));
     } else {
       print('Error, unhandled listType in goToAddNew in item_list.dart');
     }
